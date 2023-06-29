@@ -1,0 +1,175 @@
+{
+  type: <ref *1> {
+    name: 'Create Listing',
+    url: '/createListing/listing-type',
+    state: {
+      singleCard: {
+        name: 'Single Card',
+        url: '/createListing/single-card',
+        next: <ref *2> {
+          name: 'Mixed Bundle',
+          url: '/createListing/mixed-bundle',
+          state: {
+            title: {
+              name: 'Title',
+              url: '/createListing/mixed-bundle/title',
+              next: {
+                name: 'Tag Selection',
+                url: '/createListing/mixec-bundle/tag-selection',
+                next: {
+                  name: 'Sealed Single',
+                  url: '/createListing/sealed-single',
+                  next: undefined,
+                  previous: [Circular *1]
+                },
+                previous: [Circular *2]
+              },
+              previous: [Circular *2]
+            },
+            tagSelection: {
+              name: 'Tag Selection',
+              url: '/createListing/mixec-bundle/tag-selection',
+              next: {
+                name: 'Sealed Single',
+                url: '/createListing/sealed-single',
+                next: undefined,
+                previous: [Circular *1]
+              },
+              previous: [Circular *2]
+            }
+          },
+          next: {
+            name: 'Title',
+            url: '/createListing/mixed-bundle/title',
+            next: {
+              name: 'Tag Selection',
+              url: '/createListing/mixec-bundle/tag-selection',
+              next: {
+                name: 'Sealed Single',
+                url: '/createListing/sealed-single',
+                next: undefined,
+                previous: [Circular *1]
+              },
+              previous: [Circular *2]
+            },
+            previous: [Circular *2]
+          },
+          previous: [Circular *1]
+        },
+        previous: [Circular *1]
+      },
+      mixedBundle: <ref *2> {
+        name: 'Mixed Bundle',
+        url: '/createListing/mixed-bundle',
+        state: {
+          title: {
+            name: 'Title',
+            url: '/createListing/mixed-bundle/title',
+            next: {
+              name: 'Tag Selection',
+              url: '/createListing/mixec-bundle/tag-selection',
+              next: {
+                name: 'Sealed Single',
+                url: '/createListing/sealed-single',
+                next: undefined,
+                previous: [Circular *1]
+              },
+              previous: [Circular *2]
+            },
+            previous: [Circular *2]
+          },
+          tagSelection: {
+            name: 'Tag Selection',
+            url: '/createListing/mixec-bundle/tag-selection',
+            next: {
+              name: 'Sealed Single',
+              url: '/createListing/sealed-single',
+              next: undefined,
+              previous: [Circular *1]
+            },
+            previous: [Circular *2]
+          }
+        },
+        next: {
+          name: 'Title',
+          url: '/createListing/mixed-bundle/title',
+          next: {
+            name: 'Tag Selection',
+            url: '/createListing/mixec-bundle/tag-selection',
+            next: {
+              name: 'Sealed Single',
+              url: '/createListing/sealed-single',
+              next: undefined,
+              previous: [Circular *1]
+            },
+            previous: [Circular *2]
+          },
+          previous: [Circular *2]
+        },
+        previous: [Circular *1]
+      },
+      sealedSingle: {
+        name: 'Sealed Single',
+        url: '/createListing/sealed-single',
+        next: undefined,
+        previous: [Circular *1]
+      }
+    },
+    next: {
+      name: 'Single Card',
+      url: '/createListing/single-card',
+      next: <ref *2> {
+        name: 'Mixed Bundle',
+        url: '/createListing/mixed-bundle',
+        state: {
+          title: {
+            name: 'Title',
+            url: '/createListing/mixed-bundle/title',
+            next: {
+              name: 'Tag Selection',
+              url: '/createListing/mixec-bundle/tag-selection',
+              next: {
+                name: 'Sealed Single',
+                url: '/createListing/sealed-single',
+                next: undefined,
+                previous: [Circular *1]
+              },
+              previous: [Circular *2]
+            },
+            previous: [Circular *2]
+          },
+          tagSelection: {
+            name: 'Tag Selection',
+            url: '/createListing/mixec-bundle/tag-selection',
+            next: {
+              name: 'Sealed Single',
+              url: '/createListing/sealed-single',
+              next: undefined,
+              previous: [Circular *1]
+            },
+            previous: [Circular *2]
+          }
+        },
+        next: {
+          name: 'Title',
+          url: '/createListing/mixed-bundle/title',
+          next: {
+            name: 'Tag Selection',
+            url: '/createListing/mixec-bundle/tag-selection',
+            next: {
+              name: 'Sealed Single',
+              url: '/createListing/sealed-single',
+              next: undefined,
+              previous: [Circular *1]
+            },
+            previous: [Circular *2]
+          },
+          previous: [Circular *2]
+        },
+        previous: [Circular *1]
+      },
+      previous: [Circular *1]
+    },
+    previous: undefined
+  }
+}
