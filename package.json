@@ -4,6 +4,7 @@
   "description": "A state machine that tracks and validates state using your input model",
   "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "prestart": "tsc",
     "start": "node ./dist/index.js ",
     "test": "jest",
