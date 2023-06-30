@@ -72,14 +72,13 @@ export class StateMechanics<TValidationModel = any> {
                 nextState = this.getNextState(keys.length, nextParent, nextState, index);
                 previousState = this.getPreviousState(parent, previousState, index);
 
-                // if state has children then set this state as the previous state for the child
+                // build child state
                 if (currentState.state) {
                     childState = build(
                         currentState.state,
                         currentState,
                         config[keys[index + 1]]
                     );
-
                     nextState = childState[Object.keys(childState)[0]];
                 }
 
@@ -87,12 +86,14 @@ export class StateMechanics<TValidationModel = any> {
                 defineGetProperty(previousState, 'visible', () => previousState?.hide?.(previousState.model, previousState), previousState?.model);
 
                 acc[cur].next = (model) => {
+
                     if (model !== undefined) {
                         this.model = model
                         nextState.model = this.model;
                     }
+
                     if (nextState?.visible === false) {
-                        console.log('nextState?.visible', nextState)
+                     
                     }
 
                     return nextState
@@ -101,7 +102,7 @@ export class StateMechanics<TValidationModel = any> {
                 acc[cur].previous = (model) => {
                     if (model !== undefined) {
                         this.model = model
-                        nextState.model = this.model;
+                        previousState.model = this.model;
                     }
 
                     if (previousState?.visible === false) {

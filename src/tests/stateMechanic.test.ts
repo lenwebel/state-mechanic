@@ -113,10 +113,11 @@ describe('check validation functions work', () => {
         const instance = new StateMechanics(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
-        state = state.next();
-        expect(state.name).toBe('Single Card');
         const model = {type: 'singleCard'} as CreateListingModel;
+        state = state.next(model);
+        expect(state.name).toBe('Single Card');
         expect(state.validate(model, state)).toBe(true);
+        expect(state.model).toEqual(model);
     })
 })
 
