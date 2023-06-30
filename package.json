@@ -1,6 +1,6 @@
 {
   "name": "statemechanics",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A state machine that tracks and validates state using your input model",
   "main": "dist/index.js",
   "scripts": {

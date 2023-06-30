@@ -38,11 +38,9 @@ export class StateMechanics<TModel = any> {
                 let childState: StateConfig;
                 const currentState = config[cur];
 
-
-
                 if (keys.length === index) {
                     // if last item in array set next state to the next parent
-                    previousState = config[keys[index - 1]];
+                    // previousState = config[keys[index - 1]];
                     nextState = nextParent;
                 }
 
@@ -69,7 +67,15 @@ export class StateMechanics<TModel = any> {
                 }
 
                 if (!previousState) {
-                    previousState = parent;
+                    const cState =config[keys[index - 1] as keyof TModel]
+                    if(cState?.state)
+                    {
+                        const ks = Object.keys(cState.state) as Array<keyof TModel>;
+                        previousState = cState.state[ks[ks.length - 1]];
+
+                    } else {
+                        previousState = cState;
+                    }
                 }
 
                 acc[cur].next = nextState;
@@ -81,10 +87,6 @@ export class StateMechanics<TModel = any> {
         };
 
         const conf = build(config);
-        fs.writeFileSync(
-            './dist/stateMechanics.txt',
-            util.inspect(conf, {showHidden: false, depth: 50}),
-        );
         return conf;
 
 

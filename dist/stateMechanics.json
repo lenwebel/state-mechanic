@@ -1,0 +1,218 @@
+{StateMechanics {
+  "state": {
+    "type": "<ref *5>": {
+      "name": "Create Listing",
+      "url": "/createListing/listing-type",
+      "state": {
+        "singleCard": "<ref *4>": {
+          "name": "Single Card",
+          "url": "/createListing/single-card",
+          "next": "<ref *3>": {
+            "name": "Mixed Bundle",
+            "url": "/createListing/mixed-bundle",
+            "state": {
+              "title": "<ref *2>": {
+                "name": "Title",
+                "url": "/createListing/mixed-bundle/title",
+                "next": "<ref *1>": {
+                  "name": "Tag Selection",
+                  "url": "/createListing/mixec-bundle/tag-selection",
+                  "next": {
+                    "name": "Sealed Single",
+                    "url": "/createListing/sealed-single",
+                    "next": undefined,
+                    "previous": [Circular *1]
+                  },
+                  "previous": [Circular *2]
+                },
+                "previous": [Circular *3]
+              },
+              "tagSelection": "<ref *1>": {
+                "name": "Tag Selection",
+                "url": "/createListing/mixec-bundle/tag-selection",
+                "next": {
+                  "name": "Sealed Single",
+                  "url": "/createListing/sealed-single",
+                  "next": undefined,
+                  "previous": [Circular *1]
+                },
+                "previous": "<ref *2>": {
+                  "name": "Title",
+                  "url": "/createListing/mixed-bundle/title",
+                  "next": [Circular *1],
+                  "previous": [Circular *3]
+                }
+              }
+            },
+            "next": "<ref *2>": {
+              "name": "Title",
+              "url": "/createListing/mixed-bundle/title",
+              "next": "<ref *1>": {
+                "name": "Tag Selection",
+                "url": "/createListing/mixec-bundle/tag-selection",
+                "next": {
+                  "name": "Sealed Single",
+                  "url": "/createListing/sealed-single",
+                  "next": undefined,
+                  "previous": [Circular *1]
+                },
+                "previous": [Circular *2]
+              },
+              "previous": [Circular *3]
+            },
+            "previous": [Circular *4]
+          },
+          "previous": [Circular *5]
+        },
+        "mixedBundle": "<ref *3>": {
+          "name": "Mixed Bundle",
+          "url": "/createListing/mixed-bundle",
+          "state": {
+            "title": "<ref *2>": {
+              "name": "Title",
+              "url": "/createListing/mixed-bundle/title",
+              "next": "<ref *1>": {
+                "name": "Tag Selection",
+                "url": "/createListing/mixec-bundle/tag-selection",
+                "next": {
+                  "name": "Sealed Single",
+                  "url": "/createListing/sealed-single",
+                  "next": undefined,
+                  "previous": [Circular *1]
+                },
+                "previous": [Circular *2]
+              },
+              "previous": [Circular *3]
+            },
+            "tagSelection": "<ref *1>": {
+              "name": "Tag Selection",
+              "url": "/createListing/mixec-bundle/tag-selection",
+              "next": {
+                "name": "Sealed Single",
+                "url": "/createListing/sealed-single",
+                "next": undefined,
+                "previous": [Circular *1]
+              },
+              "previous": "<ref *2>": {
+                "name": "Title",
+                "url": "/createListing/mixed-bundle/title",
+                "next": [Circular *1],
+                "previous": [Circular *3]
+              }
+            }
+          },
+          "next": "<ref *2>": {
+            "name": "Title",
+            "url": "/createListing/mixed-bundle/title",
+            "next": "<ref *1>": {
+              "name": "Tag Selection",
+              "url": "/createListing/mixec-bundle/tag-selection",
+              "next": {
+                "name": "Sealed Single",
+                "url": "/createListing/sealed-single",
+                "next": undefined,
+                "previous": [Circular *1]
+              },
+              "previous": [Circular *2]
+            },
+            "previous": [Circular *3]
+          },
+          "previous": "<ref *4>": {
+            "name": "Single Card",
+            "url": "/createListing/single-card",
+            "next": [Circular *3],
+            "previous": [Circular *5]
+          }
+        },
+        "sealedSingle": "<ref *6>": {
+          "name": "Sealed Single",
+          "url": "/createListing/sealed-single",
+          "next": undefined,
+          "previous": "<ref *1>": {
+            "name": "Tag Selection",
+            "url": "/createListing/mixec-bundle/tag-selection",
+            "next": [Circular *6],
+            "previous": "<ref *2>": {
+              "name": "Title",
+              "url": "/createListing/mixed-bundle/title",
+              "next": [Circular *1],
+              "previous": "<ref *3>": {
+                "name": "Mixed Bundle",
+                "url": "/createListing/mixed-bundle",
+                "state: { title: [Circular *2], tagSelection": [Circular *1] },
+                "next": [Circular *2],
+                "previous": "<ref *4>": {
+                  "name": "Single Card",
+                  "url": "/createListing/single-card",
+                  "next": [Circular *3],
+                  "previous": [Circular *5]
+                }
+              }
+            }
+          }
+        }
+      },
+      "next": "<ref *4>": {
+        "name": "Single Card",
+        "url": "/createListing/single-card",
+        "next": "<ref *3>": {
+          "name": "Mixed Bundle",
+          "url": "/createListing/mixed-bundle",
+          "state": {
+            "title": "<ref *2>": {
+              "name": "Title",
+              "url": "/createListing/mixed-bundle/title",
+              "next": "<ref *1>": {
+                "name": "Tag Selection",
+                "url": "/createListing/mixec-bundle/tag-selection",
+                "next": "<ref *6>": {
+                  "name": "Sealed Single",
+                  "url": "/createListing/sealed-single",
+                  "next": undefined,
+                  "previous": [Circular *1]
+                },
+                "previous": [Circular *2]
+              },
+              "previous": [Circular *3]
+            },
+            "tagSelection": "<ref *1>": {
+              "name": "Tag Selection",
+              "url": "/createListing/mixec-bundle/tag-selection",
+              "next": "<ref *6>": {
+                "name": "Sealed Single",
+                "url": "/createListing/sealed-single",
+                "next": undefined,
+                "previous": [Circular *1]
+              },
+              "previous": "<ref *2>": {
+                "name": "Title",
+                "url": "/createListing/mixed-bundle/title",
+                "next": [Circular *1],
+                "previous": [Circular *3]
+              }
+            }
+          },
+          "next": "<ref *2>": {
+            "name": "Title",
+            "url": "/createListing/mixed-bundle/title",
+            "next": "<ref *1>": {
+              "name": "Tag Selection",
+              "url": "/createListing/mixec-bundle/tag-selection",
+              "next": "<ref *6>": {
+                "name": "Sealed Single",
+                "url": "/createListing/sealed-single",
+                "next": undefined,
+                "previous": [Circular *1]
+              },
+              "previous": [Circular *2]
+            },
+            "previous": [Circular *3]
+          },
+          "previous": [Circular *4]
+        },
+        "previous": [Circular *5]
+      },
+      "previous": undefined
+    }
+  }
+}}
