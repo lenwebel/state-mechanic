@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/lenwebel/statemachine#readme",
   "dependencies": {
+    "@types/node": "^20.3.2",
     "concurrently": "^8.2.0",
     "typescript": "^5.1.3"
   },

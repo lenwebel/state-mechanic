@@ -34,7 +34,9 @@ describe('', () => {
     }),
         it('The readme example works', () => {
             const instance = new StateMechanics<StateConfig>(config);
-            let state = instance.state.type.next;
+            let state = instance.state.type;
+            expect(state.name).toBe('Create Listing');
+            state = state.next;
 
             let serialized = util.inspect(instance, {
                 showHidden: false,
@@ -42,11 +44,12 @@ describe('', () => {
                 
             });
 
+            //write out file for debugging
             const regex = /(<.*>(?=\s{)|(\w.*)(?=:)(?<!"))(:|)/gm;
-
             serialized = '{' + serialized.replace(regex, '"$1":').replace(/'/gm, '"') + '}';
+            // fs.writeFileSync('./dist/stateMechanics.json', serialized);
+            
 
-            fs.writeFileSync('./dist/stateMechanics.json', serialized);
 
             expect(state.name).toBe('Single Card');
             state = state.next;

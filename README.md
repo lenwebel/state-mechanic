@@ -6,11 +6,11 @@ And another state machine
 
 `npm install state-mechanic`
 
-
 ## Usage
 
 ```javascript
 import { StateMachine } from 'state-mechanic';
+import assert from 'assert';
 
 // the config below is a simple example of a state machine that can be used to follow a create listing flow in a marketplace
 export const config: StateConfig = {
@@ -22,22 +22,22 @@ export const config: StateConfig = {
                 name: 'Single listing',
                 url: '/createListing/single-listing',
             },
-            mixedBundle: {
-                name: 'Mixed Bundle',
-                url: '/createListing/mixed-bundle',
+            mixedListing: {
+                name: 'Mixed listing',
+                url: '/createListing/mixed-listing',
                 state: {
                     title: {
                         name: 'Title',
-                        url: '/createListing/mixed-bundle/title',
+                        url: '/createListing/mixed-listing/title',
                     },
                     tagSelection: {
                         name: 'Tag Selection',
-                        url: '/createListing/mixec-bundle/tag-selection',
+                        url: '/createListing/mixed-listing/tag-selection',
                     },
                 },
             },
-            sealedSingle: {
-                name: 'Sealed Single',
+            sealedListing: {
+                name: 'Sealed Listing',
                 url: '/createListing/sealed-single',
             },
         },
@@ -47,6 +47,8 @@ export const config: StateConfig = {
 const stateMachine = new StateMachine(config);
 
 let state = stateMachine.next();
+
+
 
 assert(state.name === 'Create Listing');
 state = state.next;
