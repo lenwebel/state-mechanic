@@ -1,57 +1,56 @@
 import fs from 'fs';
 import util from 'util';
 
-export type StateConfig<TModel = any> = {
-    [key in keyof TModel]: State<TModel>;
+export type StateConfig = {
+    [key: string]: State;
 };
 
-
-export interface State<TState = any> {
+export interface State {
     name?: string;
     url?: string;
-    state?: StateConfig<TState>;
+    state?: StateConfig;
     next?: State;
     previous?: State;
+    display?: boolean | ((state: State, model: any) => boolean);
+    validate?: (state:State, model: any) => boolean;
 }
 
+export class StateMechanics {
+    public state: StateConfig;
 
-export class StateMechanics<TModel = any> {
-    public state: StateConfig<TModel>;
-
-    constructor(config: StateConfig<TModel>) {
+    constructor(config: StateConfig) {
         this.state = this._buildState(config);
     }
 
-    _buildState(config: StateConfig<TModel>): StateConfig<TModel> {
+    _buildState(config: StateConfig): StateConfig {
         const build = (
-            config: StateConfig<TModel>,
+            config: StateConfig,
             parent?: State,
             nextParent?: State
-        ): StateConfig<TModel> => {
-            const keys = Object.keys(config) as Array<keyof TModel>;
+        ): StateConfig => {
+            const keys = Object.keys(config) as Array<string>;
 
 
-            return keys.reduce((acc: StateConfig<TModel>, cur: keyof TModel, index: number) => {
+            return keys.reduce((acc: StateConfig, cur: string, index: number) => {
 
                 let previousState: State;
                 let nextState: State;
                 let childState: StateConfig;
                 const currentState = config[cur];
 
+                // if last item in array set next state to the next parent
                 if (keys.length === index) {
-                    // if last item in array set next state to the next parent
-                    // previousState = config[keys[index - 1]];
                     nextState = nextParent;
                 }
 
+                // if start of array set previous state to the previous parent
+                // and set next state to the next item in the array
                 if (index === 0) {
-                    // if start of array set previous state to the previous parent
                     previousState = parent;
                     nextState = nextState ?? config[keys[index + 1]];
-
                 }
+                // if state has children then set this state as the previous state for the child
                 if (currentState.state) {
-                    // if state has children then set this state as the previous state for the child
                     childState = build(
                         currentState.state,
                         currentState,
@@ -59,6 +58,8 @@ export class StateMechanics<TModel = any> {
                     );
                     nextState = childState[Object.keys(childState)[0]];
                 }
+                
+                // if no next state then set to the next state in the array
                 if (!nextState) {
                     nextState = config[keys[index + 1]];
                     if (!nextState) {
@@ -66,11 +67,12 @@ export class StateMechanics<TModel = any> {
                     }
                 }
 
+                // if no previous state then set to the previous state in the hierarchy
                 if (!previousState) {
-                    const cState =config[keys[index - 1] as keyof TModel]
+                    const cState =config[keys[index - 1] as string]
                     if(cState?.state)
                     {
-                        const ks = Object.keys(cState.state) as Array<keyof TModel>;
+                        const ks = Object.keys(cState.state) as Array<string>;
                         previousState = cState.state[ks[ks.length - 1]];
 
                     } else {
