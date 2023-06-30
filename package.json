@@ -15,8 +15,9 @@
   },
   "keywords": [
     "statemechanics",
-    "react",
-    "typescript"
+    "typescript",
+    "statemachine",
+    "node"
   ],
   "author": "webelone",
   "license": "ISC",
