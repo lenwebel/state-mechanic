@@ -1,54 +1,77 @@
-import fs from 'fs';
-import util from 'util';
+import {collapseTextChangeRangesAcrossMultipleVersions} from 'typescript';
+import {State, StateConfig} from './model';
 
-export type StateConfig = {
-    [key: string]: State;
-};
+export class StateMechanics<TValidationModel = any> {
+    public model: TValidationModel;
+    public readonly state: StateConfig<TValidationModel>;
+    public selectedState: State;
 
-export interface State {
-    name?: string;
-    url?: string;
-    state?: StateConfig;
-    next?: State;
-    previous?: State;
-    display?: boolean | ((state: State, model: any) => boolean);
-    validate?: (state:State, model: any) => boolean;
-}
-
-export class StateMechanics {
-    public state: StateConfig;
-
-    constructor(config: StateConfig) {
+    constructor(config: StateConfig<TValidationModel>) {
         this.state = this._buildState(config);
     }
 
-    _buildState(config: StateConfig): StateConfig {
+    private getNextState(lengthOfArray: number, nextParent: State<TValidationModel>, nextStateInArray: State<TValidationModel>, arrayIndex: number): State<TValidationModel> {
+        let nextState = nextStateInArray;
+        // if last item in array set next state to the next parent
+        if (lengthOfArray - 1 === arrayIndex) {
+            nextState = nextParent;
+        }
+        // if start of array set previous state to the previous parent
+        // and set next state to the next item in the array
+        if (arrayIndex === 0) {
+            nextState = nextState ?? nextStateInArray;
+        }
+
+        return nextState;
+    }
+    private getPreviousState(parent: State<TValidationModel>, previousStateInArray: State<TValidationModel>, arrayIndex: number): State<TValidationModel> {
+        let previousState: State<TValidationModel> = previousStateInArray;
+        // if start of array set previous state to the previous parent
+        // and set next state to the next item in the array
+        if (arrayIndex === 0) {
+            previousState = parent;
+        }
+
+        // if previous state at this level as children then set the previous state to the last child
+        // const pState = config[keys[index - 1] as string]
+        if (previousStateInArray?.state) {
+            const ks = Object.keys(previousStateInArray.state) as Array<string>;
+            previousState = previousStateInArray.state[ks[ks.length - 1]];
+        }
+
+
+        return previousState;
+    }
+
+    _buildState(config: StateConfig<TValidationModel>): StateConfig<TValidationModel> {
         const build = (
-            config: StateConfig,
-            parent?: State,
-            nextParent?: State
-        ): StateConfig => {
+            config: StateConfig<TValidationModel>,
+            parent?: State<TValidationModel>,
+            nextParent?: State<TValidationModel>
+        ): StateConfig<TValidationModel> => {
             const keys = Object.keys(config) as Array<string>;
+            return keys.reduce((acc: StateConfig<TValidationModel>, cur: string, index: number) => {
 
 
-            return keys.reduce((acc: StateConfig, cur: string, index: number) => {
 
-                let previousState: State;
-                let nextState: State;
-                let childState: StateConfig;
+
+                let previousState: State<TValidationModel>;
+                let nextState: State<TValidationModel>;
+                let childState: StateConfig<TValidationModel>;
                 const currentState = config[cur];
 
-                // if last item in array set next state to the next parent
-                if (keys.length === index) {
-                    nextState = nextParent;
-                }
+                // objects are passed by reference so if they are set we don't need to do anything
+                if (currentState.next && currentState.previous)
+                    return acc;
 
-                // if start of array set previous state to the previous parent
-                // and set next state to the next item in the array
-                if (index === 0) {
-                    previousState = parent;
-                    nextState = nextState ?? config[keys[index + 1]];
-                }
+
+
+                nextState = config[keys[index + 1]];
+                previousState = config[keys[index - 1]];
+
+                nextState = this.getNextState(keys.length, nextParent, nextState, index);
+                previousState = this.getPreviousState(parent, previousState, index);
+
                 // if state has children then set this state as the previous state for the child
                 if (currentState.state) {
                     childState = build(
@@ -56,32 +79,37 @@ export class StateMechanics {
                         currentState,
                         config[keys[index + 1]]
                     );
+
                     nextState = childState[Object.keys(childState)[0]];
                 }
-                
-                // if no next state then set to the next state in the array
-                if (!nextState) {
-                    nextState = config[keys[index + 1]];
-                    if (!nextState) {
-                        nextState = nextParent;
+
+                defineGetProperty(nextState, 'visible', () => nextState?.hide?.(nextState.model, nextState), nextState?.model);
+                defineGetProperty(previousState, 'visible', () => previousState?.hide?.(previousState.model, previousState), previousState?.model);
+
+                acc[cur].next = (model) => {
+                    if (model !== undefined) {
+                        this.model = model
+                        nextState.model = this.model;
                     }
-                }
-
-                // if no previous state then set to the previous state in the hierarchy
-                if (!previousState) {
-                    const cState =config[keys[index - 1] as string]
-                    if(cState?.state)
-                    {
-                        const ks = Object.keys(cState.state) as Array<string>;
-                        previousState = cState.state[ks[ks.length - 1]];
-
-                    } else {
-                        previousState = cState;
+                    if (nextState?.visible === false) {
+                        console.log('nextState?.visible', nextState)
                     }
-                }
 
-                acc[cur].next = nextState;
-                acc[cur].previous = previousState;
+                    return nextState
+                };
+
+                acc[cur].previous = (model) => {
+                    if (model !== undefined) {
+                        this.model = model
+                        nextState.model = this.model;
+                    }
+
+                    if (previousState?.visible === false) {
+                         previousState?.visible && console.log('previousState?.visible', previousState?.visible)
+                    }
+
+                    return previousState
+                };
 
 
                 return acc;
@@ -90,39 +118,22 @@ export class StateMechanics {
 
         const conf = build(config);
         return conf;
-
-
     }
 }
 
 
-export const config: StateConfig = {
-    type: {
-        name: 'Create Listing',
-        url: '/createListing/listing-type',
-        state: {
-            singleCard: {
-                name: 'Single Card',
-                url: '/createListing/single-card',
-            },
-            mixedBundle: {
-                name: 'Mixed Bundle',
-                url: '/createListing/mixed-bundle',
-                state: {
-                    title: {
-                        name: 'Title',
-                        url: '/createListing/mixed-bundle/title',
-                    },
-                    tagSelection: {
-                        name: 'Tag Selection',
-                        url: '/createListing/mixec-bundle/tag-selection',
-                    },
-                },
-            },
-            sealedSingle: {
-                name: 'Sealed Single',
-                url: '/createListing/sealed-single',
-            },
+
+function defineGetProperty<T>(object: T, property: keyof T, fnc: Function, model: any) {
+
+    if (!object) return;
+
+    if (object.hasOwnProperty(property))
+        delete object[property];
+
+    Object.defineProperty(object, property, {
+        get() {
+            return fnc?.(model);
         },
-    },
-};
+        configurable: true,
+    });
+}
