@@ -1,3 +1,4 @@
+
 import {StateConfig} from '../StateMachine/model';
 import {StateMechanics} from '../StateMachine/stateMechanics';
 

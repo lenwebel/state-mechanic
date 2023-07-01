@@ -1,14 +1,3 @@
-# state-mechanic
-
-And another state machine
-
-## Install
-
-`npm install state-mechanic`
-
-## Usage
-
-```javascript
 import {StateConfig} from '../StateMachine/model';
 import {StateMechanics} from '../StateMachine/stateMechanics';
 import assert from 'assert';
@@ -58,6 +47,7 @@ export const config: StateConfig<CreateListingModel> = {
 };
 
 
+describe('Double check readme file', () => {
     const instance = new StateMechanics(config);
 
     let state = instance.state.type;
@@ -74,7 +64,3 @@ export const config: StateConfig<CreateListingModel> = {
         expect(1).toBe(1);
     })
 });
-
-
-
-```

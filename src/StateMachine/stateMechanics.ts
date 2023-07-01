@@ -1,4 +1,4 @@
-import {collapseTextChangeRangesAcrossMultipleVersions} from 'typescript';
+
 import {State, StateConfig} from './model';
 
 export class StateMechanics<TValidationModel = any> {

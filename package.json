@@ -1,6 +1,6 @@
 {
   "name": "state-mechanic",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A state machine that tracks and validates state using your input model",
   "main": "dist/index.js",
   "scripts": {
@@ -21,7 +21,8 @@
     "state",
     "machine",
     "state-machine",
-    "node"
+    "node",
+    "vanilla"
   ],
   "author": "webelone",
   "license": "ISC",
