@@ -39,7 +39,6 @@ export class StateMechanics<TValidationModel = any> {
             previousState = previousStateInArray.state[ks[ks.length - 1]];
         }
 
-
         return previousState;
     }
 
@@ -52,9 +51,6 @@ export class StateMechanics<TValidationModel = any> {
             const keys = Object.keys(config) as Array<string>;
             return keys.reduce((acc: StateConfig<TValidationModel>, cur: string, index: number) => {
 
-
-
-
                 let previousState: State<TValidationModel>;
                 let nextState: State<TValidationModel>;
                 let childState: StateConfig<TValidationModel>;
@@ -63,8 +59,6 @@ export class StateMechanics<TValidationModel = any> {
                 // objects are passed by reference so if they are set we don't need to do anything
                 if (currentState.next && currentState.previous)
                     return acc;
-
-
 
                 nextState = config[keys[index + 1]];
                 previousState = config[keys[index - 1]];
@@ -81,9 +75,9 @@ export class StateMechanics<TValidationModel = any> {
                     );
                     nextState = childState[Object.keys(childState)[0]];
                 }
-
-                defineGetProperty(nextState, 'visible', () => nextState?.hide?.(nextState.model, nextState), nextState?.model);
-                defineGetProperty(previousState, 'visible', () => previousState?.hide?.(previousState.model, previousState), previousState?.model);
+                // typescript does not recognise optional getters
+                defineGetProperty(nextState, 'visible', () => !nextState?.hide?.(nextState.model, nextState), nextState?.model);
+                defineGetProperty(previousState, 'visible', () => !previousState?.hide?.(previousState.model, previousState), previousState?.model);
 
                 acc[cur].next = (model) => {
 
@@ -93,7 +87,7 @@ export class StateMechanics<TValidationModel = any> {
                     }
 
                     if (nextState?.visible === false) {
-                     
+                        return nextState.next(model);
                     }
 
                     return nextState
@@ -106,7 +100,7 @@ export class StateMechanics<TValidationModel = any> {
                     }
 
                     if (previousState?.visible === false) {
-                         previousState?.visible && console.log('previousState?.visible', previousState?.visible)
+                        return previousState.previous(model);
                     }
 
                     return previousState

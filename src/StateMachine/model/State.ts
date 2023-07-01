@@ -2,7 +2,7 @@ import {StateConfig} from './StateConfig';
 
 export class State<TValidationModel = any>  {
     
-    public visible?: boolean;
+    public visible?: boolean = true;
     public name?: string;
     public url?: string;
     public state?: StateConfig<TValidationModel>;
