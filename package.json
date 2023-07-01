@@ -1,5 +1,5 @@
 {
-  "name": "statemechanics",
+  "name": "state-mechanic",
   "version": "1.0.4",
   "description": "A state machine that tracks and validates state using your input model",
   "main": "dist/index.js",
@@ -15,9 +15,12 @@
     "url": "git+https://github.com/lenwebel/statemachine.git"
   },
   "keywords": [
-    "statemechanics",
+    "state-mechanic",
     "typescript",
-    "statemachine",
+    "state-machine",
+    "state",
+    "machine",
+    "state-machine",
     "node"
   ],
   "author": "webelone",
