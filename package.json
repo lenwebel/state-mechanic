@@ -1,14 +1,16 @@
 {
   "name": "state-mechanic",
-  "version": "1.0.5",
+  "version": "1.0.53",
   "description": "A state machine that tracks and validates state using your input model",
-  "main": "dist/index.js",
+  "main": "dist/index",
+  "typings": "dist/lib/index.d.ts",
   "scripts": {
-    "build":"tsc",
-    "prestart": "tsc",
+    "build":"npx rimraf dist && tsc && tsc -d --declarationDir dist/lib --declarationMap --emitDeclarationOnly",
+    "prestart": "npm run build",
     "start": "node ./dist/index.js ",
     "test": "jest",
     "dev": "concurrently -k \"tsc -w\" \"nodemon ./dist/index.js\""
+    
   },
   "repository": {
     "type": "git",

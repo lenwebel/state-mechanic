@@ -8,11 +8,13 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
+    "allowJs": true,
     "baseUrl": ".",
+    "declaration": true,
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "exclude": ["dist"],
-  "include": ["src/**/*"]
+  "exclude": ["dist, src/tests/**/*"],
+  "include": ["src/index.ts"]
 }
