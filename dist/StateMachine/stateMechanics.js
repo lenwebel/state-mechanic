@@ -82,6 +82,9 @@ class StateMechanics {
         const conf = build(config);
         return conf;
     }
+    setCurrentState(state) {
+        this.selectedState = state;
+    }
     setModel(model) {
         /// updating the model, not sure if this affects the state model references.
         this.model = model;
