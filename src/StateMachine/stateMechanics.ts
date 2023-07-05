@@ -1,7 +1,6 @@
 
-import {takeCoverage} from 'v8';
-import { InternalState, State, StateConfig, StateType} from './model';
-import {BindingOrAssignmentElementRestIndicator} from 'typescript';
+import { InternalState,StateConfig, StateType} from './model';
+
 
 export class StateMechanics<TValidationModel = any> {
     public model: TValidationModel;
