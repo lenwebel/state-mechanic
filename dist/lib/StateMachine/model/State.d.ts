@@ -1,14 +1,12 @@
-import { StateConfig } from './StateConfig';
+import { InternalState, StateConfig } from './StateConfig';
+export type StateType<TValidationModel = any> = InternalState<TValidationModel> | State<TValidationModel>;
 export declare class State<TValidationModel = any> {
     visible?: boolean;
     name?: string;
     url?: string;
-    state?: StateConfig<TValidationModel>;
-    next?: (model?: TValidationModel) => State<TValidationModel>;
-    previous?: (model?: TValidationModel) => State<TValidationModel>;
-    hide?: <TValidationModel>(model: TValidationModel, state?: State<TValidationModel>) => boolean;
-    validate?: <TValidationModel>(model: TValidationModel, state?: State<TValidationModel>) => boolean;
+    state?: StateConfig<TValidationModel, StateType<TValidationModel>>;
+    hide?: (model: TValidationModel, state?: StateType<TValidationModel>) => boolean;
+    validate?: (model: TValidationModel, state?: StateType<TValidationModel>) => boolean;
     model?: TValidationModel;
-    constructor();
 }
 //# sourceMappingURL=State.d.ts.map
