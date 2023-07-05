@@ -117,6 +117,14 @@ export class StateMechanics<TValidationModel = any> {
         const conf = build(config);
         return conf;
     }
+
+    moveNext() {
+        this.selectedState = this.selectedState.next();
+    }
+    movePrevious() {
+        this.selectedState = this.selectedState.previous();
+    }
+
     setCurrentState(state: InternalState<TValidationModel>){
         this.selectedState = state ;
     }
