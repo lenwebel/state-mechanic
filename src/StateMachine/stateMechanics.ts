@@ -5,7 +5,7 @@ import { InternalState,StateConfig, StateType} from './model';
 export class StateMechanics<TValidationModel = any> {
     public model: TValidationModel;
     public readonly state: StateConfig<TValidationModel, InternalState<TValidationModel>>;
-    public selectedState: ReadyState;
+    public selectedState: InternalState<TValidationModel>;
 
     constructor(config: StateConfig<TValidationModel, StateType>) {
         this.state = this._buildState(config as StateConfig<TValidationModel, InternalState<TValidationModel>>);
@@ -116,6 +116,9 @@ export class StateMechanics<TValidationModel = any> {
 
         const conf = build(config);
         return conf;
+    }
+    setCurrentState(state: InternalState<TValidationModel>){
+        this.selectedState = state ;
     }
 
     setModel(model: TValidationModel) {
