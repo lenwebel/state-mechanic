@@ -13,7 +13,18 @@ on:
       - master
 
 jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Update version in package.json
+        # You may pin to the exact commit or the version.
+        # uses: maks-stupak/gh-action-bump-version@68745b36f06428d175b5aec775a41540ac1788aa
+        - uses: maks-stupak/gh-action-bump-version@v7.1.5
+
+    
+
   build:
+    needs: version-bump
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
