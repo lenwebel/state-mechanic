@@ -82,6 +82,10 @@ class StateMechanics {
         const conf = build(config);
         return conf;
     }
+    setModel(model) {
+        /// updating the model, not sure if this affects the state model references.
+        this.model = model;
+    }
 }
 exports.StateMechanics = StateMechanics;
 function defineGetProperty(object, property, fnc, model) {

@@ -7,5 +7,6 @@ export declare class StateMechanics<TValidationModel = any> {
     private getNextState;
     private getPreviousState;
     _buildState(config: StateConfig<TValidationModel, InternalState<TValidationModel>>): StateConfig<TValidationModel, InternalState>;
+    setModel(model: TValidationModel): void;
 }
 //# sourceMappingURL=stateMechanics.d.ts.map

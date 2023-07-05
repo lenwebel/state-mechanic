@@ -117,6 +117,11 @@ export class StateMechanics<TValidationModel = any> {
         const conf = build(config);
         return conf;
     }
+
+    setModel(model: TValidationModel) {
+        /// updating the model, not sure if this affects the state model references.
+        this.model = model;
+    }
 }
 
 
