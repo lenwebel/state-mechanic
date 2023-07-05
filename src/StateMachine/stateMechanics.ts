@@ -9,6 +9,7 @@ export class StateMechanics<TValidationModel = any> {
 
     constructor(config: StateConfig<TValidationModel, StateType>) {
         this.state = this._buildState(config as StateConfig<TValidationModel, InternalState<TValidationModel>>);
+        this.selectedState = this.state[Object.keys(this.state)[0]];
     }
 
     private getNextState(lengthOfArray: number, nextParent:InternalState<TValidationModel>, nextStateInArray:InternalState<TValidationModel>, arrayIndex: number):InternalState<TValidationModel> {
