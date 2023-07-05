@@ -163,15 +163,13 @@ describe('Test Hide works', () => {
 
         expect(instance.selectedState).toBe(instance.state.type);
         instance.moveNext();
-        console.log(instance.selectedState.name)
         expect(instance.selectedState).toBe(instance.state.type.next());
         
         instance.moveNext();
-        console.log(instance.selectedState.name)
         expect(instance.selectedState).toBe(instance.state.type.next().next());
 
+
         instance.movePrevious() 
-        console.log(instance.selectedState.name)
          expect(instance.selectedState).toBe(instance.state.type.next());
     })
 
