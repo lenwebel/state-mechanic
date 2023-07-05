@@ -1,16 +1,18 @@
 
-import {State, StateConfig} from './model';
+import {takeCoverage} from 'v8';
+import { InternalState, State, StateConfig, StateType} from './model';
+import {BindingOrAssignmentElementRestIndicator} from 'typescript';
 
 export class StateMechanics<TValidationModel = any> {
     public model: TValidationModel;
-    public readonly state: StateConfig<TValidationModel>;
-    public selectedState: State;
+    public readonly state: StateConfig<TValidationModel, InternalState<TValidationModel>>;
+    public selectedState: ReadyState;
 
-    constructor(config: StateConfig<TValidationModel>) {
-        this.state = this._buildState(config);
+    constructor(config: StateConfig<TValidationModel, StateType>) {
+        this.state = this._buildState(config as StateConfig<TValidationModel, InternalState<TValidationModel>>);
     }
 
-    private getNextState(lengthOfArray: number, nextParent: State<TValidationModel>, nextStateInArray: State<TValidationModel>, arrayIndex: number): State<TValidationModel> {
+    private getNextState(lengthOfArray: number, nextParent:InternalState<TValidationModel>, nextStateInArray:InternalState<TValidationModel>, arrayIndex: number):InternalState<TValidationModel> {
         let nextState = nextStateInArray;
         // if last item in array set next state to the next parent
         if (lengthOfArray - 1 === arrayIndex) {
@@ -24,8 +26,8 @@ export class StateMechanics<TValidationModel = any> {
 
         return nextState;
     }
-    private getPreviousState(parent: State<TValidationModel>, previousStateInArray: State<TValidationModel>, arrayIndex: number): State<TValidationModel> {
-        let previousState: State<TValidationModel> = previousStateInArray;
+    private getPreviousState(parent:InternalState<TValidationModel>, previousStateInArray:InternalState<TValidationModel>, arrayIndex: number):InternalState<TValidationModel> {
+        let previousState:InternalState<TValidationModel> = previousStateInArray;
         // if start of array set previous state to the previous parent
         // and set next state to the next item in the array
         if (arrayIndex === 0) {
@@ -36,24 +38,26 @@ export class StateMechanics<TValidationModel = any> {
         // const pState = config[keys[index - 1] as string]
         if (previousStateInArray?.state) {
             const ks = Object.keys(previousStateInArray.state) as Array<string>;
-            previousState = previousStateInArray.state[ks[ks.length - 1]];
+            previousState = previousStateInArray.state[ks[ks.length - 1]] as InternalState<TValidationModel>;
         }
 
         return previousState;
     }
 
-    _buildState(config: StateConfig<TValidationModel>): StateConfig<TValidationModel> {
+    _buildState(config: StateConfig<TValidationModel, InternalState<TValidationModel>>): StateConfig<TValidationModel, InternalState> {
         const build = (
-            config: StateConfig<TValidationModel>,
-            parent?: State<TValidationModel>,
-            nextParent?: State<TValidationModel>
-        ): StateConfig<TValidationModel> => {
-            const keys = Object.keys(config) as Array<string>;
-            return keys.reduce((acc: StateConfig<TValidationModel>, cur: string, index: number) => {
+            config: StateConfig<TValidationModel, InternalState<TValidationModel> >,
+            parent?: InternalState<TValidationModel>,
+            nextParent?:InternalState<TValidationModel>
+        ): StateConfig<TValidationModel, InternalState<TValidationModel>> => {
 
-                let previousState: State<TValidationModel>;
-                let nextState: State<TValidationModel>;
-                let childState: StateConfig<TValidationModel>;
+
+            const keys = Object.keys(config) as Array<string>;
+            return keys.reduce((acc: StateConfig<TValidationModel, InternalState<TValidationModel>>, cur: string, index: number) => {
+
+                let previousState: InternalState<TValidationModel>;
+                let nextState:InternalState<TValidationModel>;
+                let childState: StateConfig<TValidationModel, InternalState<TValidationModel>>;
                 const currentState = config[cur];
 
                 // objects are passed by reference so if they are set we don't need to do anything
@@ -69,7 +73,7 @@ export class StateMechanics<TValidationModel = any> {
                 // build child state
                 if (currentState.state) {
                     childState = build(
-                        currentState.state,
+                        currentState.state as StateConfig<TValidationModel, InternalState<TValidationModel>> ,
                         currentState,
                         config[keys[index + 1]]
                     );

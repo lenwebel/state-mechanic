@@ -1,5 +1,5 @@
 
-import {StateConfig} from '../StateMachine/model';
+import {State, StateConfig} from '../StateMachine/model';
 import {StateMechanics} from '../StateMachine/stateMechanics';
 
 export interface CreateListingModel {
@@ -26,14 +26,14 @@ export const config: StateConfig<CreateListingModel> = {
                         name: 'Title',
                         url: '/createListing/mixed-bundle/title',
                         hide: (model?: CreateListingModel) => {
-                            return ['singleCard', 'mixedBundle'].includes(model?.type);
+                            return ['singleCard', 'mixedBundle'].includes(model?.type ?? '');
                         }
                     },
                     tagSelection: {
                         name: 'Tag Selection',
                         url: '/createListing/mixec-bundle/tag-selection',
                         hide: (model?: CreateListingModel) => {
-                            return ['singleCard', 'mixedBundle'].includes(model?.type);
+                            return ['singleCard', 'mixedBundle'].includes(model?.type ?? '');
                         }
                     },
                 },
@@ -108,7 +108,7 @@ describe('check validation functions work', () => {
         expect(state.name).toBe('Create Listing');
         state = state.next(model);
         expect(state.name).toBe('Single Card');
-        expect(state.validate(model, state)).toBe(false);
+        expect(state.validate?.(model, state)).toBe(false);
     })
     it('Validator: Single Card should return true if not selected', () => {
         const instance = new StateMechanics(config);
@@ -117,7 +117,7 @@ describe('check validation functions work', () => {
         const model = {type: 'singleCard'} as CreateListingModel;
         state = state.next(model);
         expect(state.name).toBe('Single Card');
-        expect(state.validate(model, state)).toBe(true);
+        expect(state.validate?.(model, state)).toBe(true);
         expect(state.model).toEqual(model);
     })
 })
@@ -153,8 +153,8 @@ describe('Test Hide works', () => {
         const model = {type: 'singleCard'} as CreateListingModel;
 
         // they actually should not be in the output.
-        expect(state.hide(model)).toBe(true);
-        expect(state.next().hide(model)).toBe(true);
+        expect(state.hide?.(model)).toBe(true);
+        expect(state.next().hide?.(model)).toBe(true);
 
     })
 

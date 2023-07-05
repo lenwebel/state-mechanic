@@ -1,5 +1,13 @@
-import {State} from './State';
+import {TypeVariable} from 'typescript';
+import {State, StateType} from './State';
 
-export type StateConfig<TValidationModel> = {
-    [key: string]: State<TValidationModel>;
+
+export class InternalState<TValidationModel = any> extends State<TValidationModel> {
+    public next: (model?: TValidationModel) => InternalState<TValidationModel>;
+    public previous: (model?: TValidationModel) => InternalState<TValidationModel>;
+}
+
+
+export type StateConfig<TValidationModel, TState = State<TValidationModel>> = {
+    [key: string]: TState;
 };
