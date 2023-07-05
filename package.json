@@ -1,6 +1,6 @@
 {
   "name": "state-mechanic",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "A state machine that tracks and validates state using your input model",
   "main": "dist/index",
   "typings": "dist/lib/index.d.ts",
