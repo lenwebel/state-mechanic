@@ -63,4 +63,14 @@ describe('Double check readme file', () => {
         assert(state.name === 'Title');
         expect(1).toBe(1);
     })
+
+    describe('selected state should be set to the first state', () => {
+        const instance = new StateMechanics(config);
+        expect(instance.selectedState.name).toBe('Create Listing');
+        instance.moveNext();
+        expect(instance.selectedState.name).toBe('Single Card');
+
+
+
+    });
 });

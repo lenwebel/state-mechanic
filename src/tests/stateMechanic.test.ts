@@ -152,10 +152,27 @@ describe('Test Hide works', () => {
         expect(state.name).toBe('Title');
         const model = {type: 'singleCard'} as CreateListingModel;
 
-        // they actually should not be in the output.
         expect(state.hide?.(model)).toBe(true);
         expect(state.next().hide?.(model)).toBe(true);
 
+    })
+
+    describe('Test SelectedState', () => {
+        const instance = new StateMechanics(config);
+        console.log(instance.selectedState.name)
+
+        expect(instance.selectedState).toBe(instance.state.type);
+        instance.moveNext();
+        console.log(instance.selectedState.name)
+        expect(instance.selectedState).toBe(instance.state.type.next());
+        
+        instance.moveNext();
+        console.log(instance.selectedState.name)
+        expect(instance.selectedState).toBe(instance.state.type.next().next());
+
+        instance.movePrevious() 
+        console.log(instance.selectedState.name)
+         expect(instance.selectedState).toBe(instance.state.type.next());
     })
 
 })
