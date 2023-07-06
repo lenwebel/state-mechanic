@@ -26,6 +26,7 @@ jobs:
           git checkout -b "release-${VERSION}"
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
+          echo $REPOSITORY
           git status
           git tag ${VERSION}
           git push $REPOSITORY "release-${VERSION}"
