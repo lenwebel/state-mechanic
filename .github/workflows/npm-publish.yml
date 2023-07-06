@@ -47,6 +47,7 @@ jobs:
           git rev-parse HEAD
           git branch
           gh pr create --fill
+          gh pr merge --squash --auto --merge --delete-branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
