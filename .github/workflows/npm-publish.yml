@@ -10,6 +10,8 @@ on:
   push:
     tags:
       - '!release-**'
+    branches:
+      - master
 
 jobs:
   version:
@@ -46,7 +48,7 @@ jobs:
         run: |
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
-          git tag ${VERSION}
+          git tag release-${VERSION}
           git log -2
         
       - name: Push new branch
