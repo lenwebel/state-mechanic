@@ -22,11 +22,11 @@ export class StateValidator {
         })
 
 
-        keys.forEach((key) => {
-            const state = config[key];
-            if (state.state) {
-                // StateValidator.validate(state.state);
-            }
-        });
+        // keys.forEach((key) => {
+        //     const state = config[key];
+        //     if (state.state) {
+        //         // StateValidator.validate(state.state);
+        //     }
+        // });
     }
 }
