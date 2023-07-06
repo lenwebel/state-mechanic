@@ -36,6 +36,7 @@ jobs:
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
+          git log -2
         
       - name: Push new branch
         run: |
