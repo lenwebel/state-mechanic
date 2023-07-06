@@ -43,8 +43,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-
-            const context = github.context;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
 
