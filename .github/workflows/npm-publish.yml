@@ -29,8 +29,10 @@ jobs:
           git checkout -b release-${VERSION}
           git add .
           git commit -m"version update release-${VERSION}"
-          git push --set-upstream origin release-${VERSION}
+          git push $REPOSITORY release-${VERSION}
           git request-pull release-${VERSION} master
+          # git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git" -f --follow-tags
+
   publish-npm:
     needs: version
     runs-on: ubuntu-latest
