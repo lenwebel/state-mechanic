@@ -6,25 +6,25 @@ name: Node.js Package
 on:
   workflow_dispatch:
   push:
-    tags:
-      - '!release-**'
+    tags-ignore:
+      - release-**
     branches:
       - master
 
 jobs:
   version:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      deployments: write
-      discussions: write
-      issues: write
-      packages: write
-      pages: write
-      statuses: write
-      pull-requests: write
+    # permissions:
+    #   actions: write
+    #   checks: write
+    #   contents: write
+    #   deployments: write
+    #   discussions: write
+    #   issues: write
+    #   packages: write
+    #   pages: write
+    #   statuses: write
+    #   pull-requests: write
 
     steps:
       - name: Checkout code  
