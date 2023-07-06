@@ -26,7 +26,7 @@ jobs:
           echo $REPOSITORY
           git status
           git tag ${VERSION}
-          git push ${REPOSITORY} "release-${VERSION}"
+          git push "https://$GITHUB_ACTOR:${GITHUB_TOKEN}@github.com/release-${VERSION}.git" "release-${VERSION}"
           git request-pull release-${VERSION} master
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
