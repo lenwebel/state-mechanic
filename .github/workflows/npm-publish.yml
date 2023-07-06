@@ -40,6 +40,7 @@ jobs:
       - name: Push new branch
         run: |
           git push --set-upstream origin release-${GITHUB_SHA}
+          sleep 5s
 
       - name: Create Pull Request
         run: |
