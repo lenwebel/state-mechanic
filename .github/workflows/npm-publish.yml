@@ -47,7 +47,10 @@ jobs:
           git rev-parse HEAD
           git branch
           gh pr create --fill
-          gh pr merge --squash --auto --merge --delete-branch
+          
+      - name: Approve PR
+        run: |
+          gh pr merge --squash --delete-branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
