@@ -4,8 +4,6 @@
 name: Node.js Package
 
 on:
-  release:
-    types: [created]
   workflow_dispatch:
   push:
     tags:
@@ -32,10 +30,16 @@ jobs:
       - name: Checkout code  
         uses: actions/checkout@v2
 
+      - name: Set current date as env variable
+        run: echo "MY_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $MY_DATE
+
       - name: Setup Git
         run: |
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
+          git tag release-release-${$MY_DATE}
       - name: Checkout new branch
         run: |
           git checkout -b "release-${GITHUB_SHA}"
@@ -49,7 +53,6 @@ jobs:
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
           git tag release-${VERSION}
-          git log -2
         
       - name: Push new branch
         run: |
@@ -57,8 +60,6 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          git rev-parse HEAD
-          git branch
           gh pr create --fill
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
