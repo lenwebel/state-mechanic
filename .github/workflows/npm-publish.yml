@@ -30,7 +30,8 @@ jobs:
     steps:
       - name: Checkout code  
         uses: actions/checkout@v2
-
+        with: 
+          token: ${{ secrets.DEPLOYMENT_PAT }}
       - name: Set current date as env variable
         run: echo "MY_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
       - name: Echo current date
@@ -52,8 +53,6 @@ jobs:
       - name: Push change to repo
         run: |
           git push --follow-tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}    
 
   publish-npm:
     needs: version
