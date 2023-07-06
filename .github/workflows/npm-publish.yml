@@ -17,16 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-      - run: git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      - run: git config user.name "$GITHUB_ACTOR"
-      - run: npm version patch -m "v%s"
-      - run: VERSION=$(node -p "require('./package.json').version")
-      - run: git tag ${VERSION}
+      - run: |
+          eval "$(ssh-agent -s)"
+          ssh-add <(echo "$DEPLOY_KEY")
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "$GITHUB_ACTOR"
+          npm version patch -m "v%s"
+          VERSION=$(node -p "require('./package.json').version")
+          git tag ${VERSION}
+          git push "https://github.com:$GITHUB_ACTOR/$GITHUB_REPOSITORY.git" --follow-tags
       # - run: git push "https://$GITHUB_ACTOR:${{ secrets.DEPLOY_KEY_1 }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
-      - run: git push "https://github.com/$GITHUB_REPOSITORY.git" --follow-tags
-
+        env:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
   publish-npm:
     needs: version
