@@ -25,7 +25,7 @@ jobs:
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
-          git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git -f" --follow-tags
+          git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git" -f --follow-tags
 
   publish-npm:
     needs: version
