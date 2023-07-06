@@ -26,7 +26,7 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
           git push "https://github.com:$GITHUB_ACTOR/$GITHUB_REPOSITORY.git" --follow-tags
-      # - run: git push "https://$GITHUB_ACTOR:${{ secrets.DEPLOY_KEY_1 }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
+      # - run: git push "https://$GITHUB_ACTOR:${{ secrets.DEPLOY_KEY }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
         env:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
