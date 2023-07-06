@@ -8,11 +8,14 @@ on:
   push:
     tags-ignore:
       - v**
+      - release-**
     branches:
       - master
 
 jobs:
   version:
+    
+    if: startswith(github.ref, 'refs/tags/v') != true
     runs-on: ubuntu-latest
     # permissions:
     #   actions: write
@@ -39,8 +42,6 @@ jobs:
         run: |
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
-          git tag release-${MY_DATE}
-          git push --tags release-${MY_DATE}
       - name: Checkout new branch
         run: |
           git checkout -b "release-${GITHUB_SHA}"
