@@ -15,16 +15,11 @@ on:
 jobs:
   version:
     runs-on: ubuntu-latest
-    env:
-      ssh-key: ${{ secrets.DEPLOY_KEY }}
     steps:
       - uses: actions/checkout@v2
       - run: |
           eval "$(ssh-agent -s)"
-          echo "$DEPLOY_KEY"
-          echo "$GITHUB_ACTOR"
-          echo "$GITHUB_REPOSITORY"
-          ssh-add <(echo "$DEPLOY_KEY")
+          ssh-add <(echo "${{ secrets.DEPLOY_KEY }}")
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
           npm version patch -m "v%s"
