@@ -15,7 +15,8 @@ on:
 jobs:
   version:
     
-    if: startswith(github.ref, 'refs/tags/v') != true
+    if: startswith(github.event.head_commit.message, 'v') != true
+    
     runs-on: ubuntu-latest
     # permissions:
     #   actions: write
