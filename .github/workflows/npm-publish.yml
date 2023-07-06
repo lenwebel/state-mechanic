@@ -16,15 +16,53 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
+      - name: Checkout code  
+        uses: actions/checkout@v2
+
+      - name: Setup Git
+        run: |
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
+      - name: Checkout new branch
+        run: |
           git checkout -b "release-${GITHUB_SHA}"
+
+      - name: Bump version and tag branch
+        run: |
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
+        
+      - name: Push new branch
+        run: |
           git push --set-upstream origin release-${GITHUB_SHA}
+
+      - name: Create Pull Request
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const github = require('@actions/github');
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+
+            const context = github.context;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const title = 'Release';
+            const head = context.sha;
+            const base = 'main';
+
+            octokit.pulls.create({
+              owner: owner,
+              repo: repo,
+              title: title,
+              head: head,
+              base: base
+            });
+
+
+
           git request-pull -p master https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git release-${GITHUB_SHA} 
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
