@@ -13,10 +13,7 @@ on:
       - master
 
 jobs:
-  version:
-    
-    if: startswith(github.event.head_commit.message, 'v') != true
-    
+  version:    
     runs-on: ubuntu-latest
     # permissions:
     #   actions: write
