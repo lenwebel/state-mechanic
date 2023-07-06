@@ -47,6 +47,8 @@ jobs:
           git rev-parse HEAD
           git branch
           gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
           
       - name: Approve PR
         run: |
