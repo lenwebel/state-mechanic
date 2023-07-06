@@ -157,6 +157,7 @@ describe('Test Hide works', () => {
 
     })
 
+    
     describe('Test SelectedState', () => {
         const instance = new StateMechanics(config);
         console.log(instance.selectedState.name)
