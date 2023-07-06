@@ -25,7 +25,7 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
       - name: Checkout new branch
         run: |
-          git checkout -b "release-${GITHUB_SHA}"
+          git checkout -b "release-${VERSION}"
 
       - name: Pull recent commits
         run: |
@@ -39,12 +39,13 @@ jobs:
         
       - name: Push new branch
         run: |
-          git push --set-upstream origin release-${GITHUB_SHA}
+          git push --set-upstream origin release-${VERSION}
           sleep 5s
 
       - name: Create Pull Request
         run: |
-          gh pr create --title "release-${version}" --body "version bump to ${version}" --base master --head $(git rev-parse HEAD)
+          git rev-parse HEAD
+          gh pr create --title "release-${VERSION}" --body "version bump to ${VERSION}" --base master --head $(git rev-parse HEAD)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
