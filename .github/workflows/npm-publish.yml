@@ -39,7 +39,7 @@ jobs:
         run: |
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
-          git tag release-release-${$MY_DATE}
+          git tag release-${MY_DATE}
       - name: Checkout new branch
         run: |
           git checkout -b "release-${GITHUB_SHA}"
