@@ -20,15 +20,11 @@ jobs:
       - run: |
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
-          git checkout -b "release-${VERSION}"
+          git checkout -b "release-${GITHUB_SHA}"
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
-
-          echo "repo: $REPOSITORY"
-          git status
-          echo "tag: ${VERSION}"
           git tag ${VERSION}
-          git push "https://$GITHUB_ACTOR:${GITHUB_TOKEN}@github.com/release-${VERSION}.git" "release-${VERSION}"
+          git push "https://$GITHUB_ACTOR:${GITHUB_TOKEN}@github.com/release-${GITHUB_SHA}.git" "release-${GITHUB_SHA}"
           git request-pull release-${VERSION} master
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
