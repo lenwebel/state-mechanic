@@ -38,28 +38,11 @@ jobs:
           git push --set-upstream origin release-${GITHUB_SHA}
 
       - name: Create Pull Request
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            constgh = require('@actions/github');
-            const octokit =gh.getOctokit(process.env.GITHUB_TOKEN);
-
-            const ghContext = gh.context;
-            const owner = ghContext.repo.owner;
-            const repo = ghContext.repo.repo;
-
-            const title = 'Release';
-            const head = ghContext.sha;
-            const base = 'master';
-
-            octokit.pulls.create({
-              owner: owner,
-              repo: repo,
-              title: title,
-              head: head,
-              base: base
-            });
+        run: |
+          gh pr create --title "release-${version}" --body "version bump to ${version}" --base master --head $(git rev-parse HEAD)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
+ 
   publish-npm:
     needs: version
     runs-on: ubuntu-latest
