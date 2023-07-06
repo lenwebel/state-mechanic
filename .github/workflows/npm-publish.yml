@@ -45,12 +45,12 @@ jobs:
             constgh = require('@actions/github');
             const octokit =gh.getOctokit(process.env.GITHUB_TOKEN);
 
-            const context =gh.context;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
+            const ghContext = gh.context;
+            const owner = ghContext.repo.owner;
+            const repo = ghContext.repo.repo;
 
             const title = 'Release';
-            const head = context.sha;
+            const head = ghContext.sha;
             const base = 'master';
 
             octokit.pulls.create({
