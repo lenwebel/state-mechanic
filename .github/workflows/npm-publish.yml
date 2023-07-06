@@ -28,7 +28,7 @@ jobs:
           git request-pull -p master ${REPOSITORY} release-${GITHUB_SHA} 
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
-          REPOSITORY: "https://$GITHUB_ACTOR:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY.git"
+          REPOSITORY: "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
   publish-npm:
     needs: version
     runs-on: ubuntu-latest
