@@ -20,9 +20,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
       - run: |
-          # eval "$(ssh-agent -s)"
-          # ssh-add <(echo "${{ secrets.DEPLOYMENT_PAT }}")
-          
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
           npm version patch -m "v%s"
