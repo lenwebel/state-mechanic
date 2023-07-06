@@ -36,7 +36,9 @@ jobs:
       - name: Set current date as env variable
         run: echo "MY_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
       - name: Echo current date
-        run: echo $MY_DATE
+        run: | 
+          echo $MY_DATE
+          echo $GITHUB_REF
 
       - name: Setup Git
         run: |
