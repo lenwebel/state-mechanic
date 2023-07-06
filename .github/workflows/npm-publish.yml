@@ -6,8 +6,8 @@ name: Node.js Package
 on:
   workflow_dispatch:
   push:
-    tags:
-      - '!release-**'
+    tags-ignore:
+      - release-**
     branches:
       - master
 
