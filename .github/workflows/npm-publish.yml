@@ -47,7 +47,6 @@ jobs:
         run: |
           git rev-parse HEAD
           git branch
-          git 
           gh pr create
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
