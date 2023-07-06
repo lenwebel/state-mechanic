@@ -15,6 +15,9 @@ on:
 jobs:
   version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout code  
         uses: actions/checkout@v2
@@ -52,7 +55,7 @@ jobs:
           
       - name: Approve PR
         run: |
-          gh pr review -a
+          gh pr review --approve
           gh pr merge --admin --squash --delete-branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
