@@ -55,7 +55,7 @@ jobs:
           gh pr review -a
           gh pr merge --admin --squash --delete-branch
         env:
-          GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}    
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
   publish-npm:
     needs: version
