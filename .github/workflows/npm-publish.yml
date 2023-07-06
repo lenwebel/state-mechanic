@@ -52,7 +52,7 @@ jobs:
           
       - name: Approve PR
         run: |
-          gh pr merge  --admin --auto --squash --delete-branch
+          gh pr merge  --admin --squash --delete-branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
