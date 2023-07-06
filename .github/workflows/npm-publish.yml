@@ -46,8 +46,8 @@ jobs:
         run: |
           git rev-parse HEAD
           git branch
-          git status
-          gh pr create --title "release-${GITHUB_SHA}" --body "version bump to ${GITHUB_SHA}" --base master --head origin/release-${GITHUB_SHA}
+          git 
+          gh pr create --title "release-${GITHUB_SHA}" --body "version bump to ${GITHUB_SHA}" --base master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
