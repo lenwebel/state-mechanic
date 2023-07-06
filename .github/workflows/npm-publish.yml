@@ -29,7 +29,7 @@ jobs:
           echo ${REPOSITORY}
           git status
           git tag ${VERSION}
-          git push $REPOSITORY "release-${VERSION}"
+          git push ${REPOSITORY} "release-${VERSION}"
           git request-pull release-${VERSION} master
   publish-npm:
     needs: version
