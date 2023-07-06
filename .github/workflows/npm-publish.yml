@@ -37,17 +37,17 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
         
-      # - name: Push new branch
-      #   run: |
-      #     git push --set-upstream origin release-${VERSION}
-      #     sleep 5s
+      - name: Push new branch
+        run: |
+          git push --set-upstream origin release-${VERSION}
+          sleep 5s
 
       - name: Create Pull Request
         run: |
           git rev-parse HEAD
           git branch
           git 
-          gh pr create --title "release-${GITHUB_SHA}" --body "version bump to ${GITHUB_SHA}" --base master
+          gh pr create
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
  
