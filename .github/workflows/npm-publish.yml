@@ -51,7 +51,7 @@ jobs:
 
             const title = 'Release';
             const head = context.sha;
-            const base = 'main';
+            const base = 'master';
 
             octokit.pulls.create({
               owner: owner,
@@ -60,10 +60,6 @@ jobs:
               head: head,
               base: base
             });
-
-
-
-          git request-pull -p master https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git release-${GITHUB_SHA} 
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
   publish-npm:
