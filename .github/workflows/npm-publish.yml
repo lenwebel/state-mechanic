@@ -25,10 +25,9 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
           git push --set-upstream origin release-${GITHUB_SHA}
-          git request-pull -p master ${REPOSITORY} release-${GITHUB_SHA} 
+          git request-pull -p master https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git release-${GITHUB_SHA} 
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
-          REPOSITORY: "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
   publish-npm:
     needs: version
     runs-on: ubuntu-latest
