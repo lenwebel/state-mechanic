@@ -24,7 +24,7 @@ jobs:
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
           git tag ${VERSION}
-          git push "https://$GITHUB_ACTOR:${GITHUB_TOKEN}@github.com/release-${GITHUB_SHA}.git" "release-${GITHUB_SHA}"
+          git push -u "https://$GITHUB_ACTOR:${GITHUB_TOKEN}@github.com/release-${GITHUB_SHA}.git" "release-${GITHUB_SHA}"
           git request-pull release-${VERSION} master
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_PAT }}
