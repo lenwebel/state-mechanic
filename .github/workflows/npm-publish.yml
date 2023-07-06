@@ -23,12 +23,12 @@ jobs:
       - run: |
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config user.name "$GITHUB_ACTOR"
-          git checkout -b release-${VERSION}
+          git checkout -b "release-${VERSION}"
           npm version patch -m "v%s"
           VERSION=$(node -p "require('./package.json').version")
           git status
           git tag ${VERSION}
-          git push $REPOSITORY release-${VERSION}
+          git push $REPOSITORY "release-${VERSION}"
           git request-pull release-${VERSION} master
           # git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git" -f --follow-tags
 
