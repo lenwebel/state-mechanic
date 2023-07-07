@@ -15,18 +15,6 @@ on:
 jobs:
   version:    
     runs-on: ubuntu-latest
-    # permissions:
-    #   actions: write
-    #   checks: write
-    #   contents: write
-    #   deployments: write
-    #   discussions: write
-    #   issues: write
-    #   packages: write
-    #   pages: write
-    #   statuses: write
-    #   pull-requests: write
-
     steps:
       - name: Checkout code  
         uses: actions/checkout@v2
@@ -54,7 +42,8 @@ jobs:
         run: |
           git push --follow-tags
 
-  publish-npm:
+
+  build:
     needs: version
     runs-on: ubuntu-latest
     steps:
@@ -65,6 +54,11 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
