@@ -6,15 +6,16 @@
     "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
+    "declarationDir": "dist/types",
     "outDir": "dist",
     "allowJs": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "declaration": true,
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "exclude": ["dist, src/tests/**/*"],
+  "exclude": ["dist", "src/tests/**/*"],
   "include": ["src/index.ts"]
 }
