@@ -1,5 +1,4 @@
-import {State, StateConfig} from '../StateMachine/model';
-import {StateMechanic} from '../StateMachine/stateMechanics';
+import {StateMechanic} from '../StateMachine/stateMechanic';
 import vm from 'vm';
 import util from 'util'
 import fs from 'fs'
@@ -14,7 +13,7 @@ describe('StateMechanic Class Comments', () => {
     let cls: Array<string> = [];
 
     beforeAll(async () => {
-        const file = await readFile('./src/StateMachine/stateMechanics.ts', 'utf8'); // read the file
+        const file = await readFile('./src/StateMachine/stateMechanic.ts', 'utf8'); // read the file
         const findDocumentation = /\`\`\`typescript([\s\S]+?)\`\`\`/gm; // find the documentation between MD code blocks - (all code between ```typescript and ````)
         const removeAsterisk = /\*/gm;
         const matches = file.match(findDocumentation);

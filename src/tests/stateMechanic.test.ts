@@ -1,14 +1,10 @@
 
-import {BaseConfig, State, StateConfig} from '../StateMachine/model';
-import {StateMechanic} from '../StateMachine/stateMechanics';
+import { State, StateConfig} from '../StateMachine/model';
+import {StateMechanic} from '../StateMachine/stateMechanic';
 
 
 export interface CreateListingModel {
     type?: 'singleCard' | 'mixedBundle' | 'sealedSingle';
-}
-
-export interface ConfigType extends BaseConfig<any, any> {
-    type: State<CreateListingModel>;
 }
 
 export const config: StateConfig<CreateListingModel> = {

@@ -1,11 +1,10 @@
-import {StateConfig} from '../StateMachine/model';
-import {StateMechanic} from '../StateMachine/stateMechanics';
+import {State, StateConfig} from '../StateMachine/model';
+import {StateMechanic} from '../StateMachine/stateMechanic';
 import assert from 'assert';
 
 export interface CreateListingModel {
     type?: 'singleCard' | 'mixedBundle' | 'sealedSingle';
 }
-
 export const config: StateConfig<CreateListingModel> = {
     type: {
         name: 'Create Listing',
@@ -26,14 +25,14 @@ export const config: StateConfig<CreateListingModel> = {
                         name: 'Title',
                         url: '/createListing/mixed-bundle/title',
                         hide: (model?: CreateListingModel) => {
-                            return ['singleCard', 'mixedBundle'].includes(model?.type);
+                            return ['singleCard', 'mixedBundle'].includes(model?.type ?? '');
                         },
                     },
                     tagSelection: {
                         name: 'Tag Selection',
                         url: '/createListing/mixec-bundle/tag-selection',
                         hide: (model?: CreateListingModel) => {
-                            return ['singleCard', 'mixedBundle'].includes(model?.type);
+                            return ['singleCard', 'mixedBundle'].includes(model?.type ?? '');
                         },
                     },
                 },
@@ -42,16 +41,14 @@ export const config: StateConfig<CreateListingModel> = {
                 name: 'Sealed Single',
                 url: '/createListing/sealed-single',
             },
-        },
+        } ,
     },
 };
-
 
 describe('Double check readme file', () => {
     const instance = new StateMechanic(config);
 
     let state = instance.state.type;
-
 
     it('should create a new state navigator instance with previous and next states', () => {
 
@@ -69,8 +66,6 @@ describe('Double check readme file', () => {
         expect(instance.selectedState.name).toBe('Create Listing');
         instance.moveNext();
         expect(instance.selectedState.name).toBe('Single Card');
-
-
 
     });
 });
