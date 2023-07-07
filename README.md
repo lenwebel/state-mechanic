@@ -9,6 +9,7 @@ And another state machine
 ## Usage
 
 ```javascript
+
 import {StateConfig} from '../StateMachine/model';
 import {StateMechanic} from '../StateMachine/stateMechanics';
 import assert from 'assert';
@@ -58,23 +59,16 @@ export const config: StateConfig<CreateListingModel> = {
 };
 
 
-    const instance = new StateMechanic(config);
+const instance = new StateMechanic(config);
+let state = instance.state.type;
 
-    let state = instance.state.type;
-
-
-    it('should create a new state navigator instance with previous and next states', () => {
-
-        state = state.next();
-        assert(state.name === 'Single Card', "should be single Card");
-        state = state.next();
-        assert(state.name === 'Mixed Bundle');
-        state = state.next();
-        assert(state.name === 'Title');
-        expect(1).toBe(1);
-    })
-});
-
+state = state.next();
+assert(state.name === 'Single Card', "should be single Card");
+state = state.next();
+assert(state.name === 'Mixed Bundle');
+state = state.next();
+assert(state.name === 'Title');
+expect(1).toBe(1);
 
 
 ```
