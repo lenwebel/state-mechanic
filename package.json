@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lenwebel/statemachine.git"
+    "url": "https://github.com/lenwebel/state-mechanic"
   },
   "keywords": [
     "state-mechanic",
