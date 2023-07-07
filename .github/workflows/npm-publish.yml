@@ -43,7 +43,7 @@ jobs:
           git push --follow-tags
 
 
-  build:
+  build-and-publish:
     needs: version
     runs-on: ubuntu-latest
     steps:
@@ -54,11 +54,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
