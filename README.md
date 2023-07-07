@@ -10,7 +10,7 @@ And another state machine
 
 ```javascript
 import {StateConfig} from '../StateMachine/model';
-import {StateMechanics} from '../StateMachine/stateMechanics';
+import {StateMechanic} from '../StateMachine/stateMechanics';
 import assert from 'assert';
 
 export interface CreateListingModel {
@@ -58,7 +58,7 @@ export const config: StateConfig<CreateListingModel> = {
 };
 
 
-    const instance = new StateMechanics(config);
+    const instance = new StateMechanic(config);
 
     let state = instance.state.type;
 

@@ -1,5 +1,5 @@
 import {State, StateConfig} from '../StateMachine/model';
-import {StateMechanics} from '../StateMachine/stateMechanics';
+import {StateMechanic} from '../StateMachine/stateMechanics';
 import vm from 'vm';
 import util from 'util'
 import fs from 'fs'
@@ -26,12 +26,11 @@ describe('StateMechanic Class Comments', () => {
 
     it('Document Tests', () => {
         const sandbox = {
-            StateMechanics,
+            StateMechanic: StateMechanic,
             console,
             require,
             assert
         };
-        vm.createContext(sandbox);
 
         cls.forEach((c) => {
             vm.runInNewContext(c, {...sandbox});

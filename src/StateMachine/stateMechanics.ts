@@ -1,8 +1,8 @@
 
+
 import {InternalState, StateConfig, StateType} from './model';
 
-
-export class StateMechanics<TValidationModel> {
+export class StateMechanic<TValidationModel> {
     public model: TValidationModel;
     public readonly state: StateConfig<TValidationModel, InternalState<TValidationModel>>;
     public selectedState: InternalState<TValidationModel>;
@@ -155,7 +155,7 @@ export class StateMechanics<TValidationModel> {
      * @param model update the model if required when moving to the next state
      * @example 
      * ```typescript
-     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});
+     * const state = new StateMechanic({state1: {name: 'state1', state: {test: {name: 'child'}}}});
      * state.moveNext();
      * assert(state.selectedState.name === 'child','state should be... child - moveMoveNext' );
      * ```
@@ -170,7 +170,7 @@ export class StateMechanics<TValidationModel> {
      * @param model update the model if required when moving to the next state
      * @example
      * ```typescript
-     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});
+     * const state = new StateMechanic({state1: {name: 'state1', state: {test: {name: 'child'}}}});
      * state.moveNext();
      * assert(state.selectedState.name === 'child','state should be... child - movePrevious ');
      * state.movePrevious();
@@ -184,20 +184,20 @@ export class StateMechanics<TValidationModel> {
 
     /**
      * sets the selected state to the first occurance of the state name found in the state config
-     * @param name the name of the state to find
+     * @param propertyName the name of the state to find
      * @returns the state found
      * @example
      * ```typescript
-     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});
-     * state.selectState('child');
-     * assert(state.selectedState.name === 'child','state should be... child - selectState ' );
+     * const state = new StateMechanic({state1: {name: 'state1', state: {test: {name: 'child'}}}});
+     * state.gotoState('test');
+     * assert(state.selectedState.name === 'child','state should be... child - gotoState ' );
      * ```
      */
-    public selectState(name: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>, model?: TValidationModel): void {
+    public gotoState(propertyName: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>, model?: TValidationModel): void {
 
         const findState = (states: StateConfig<TValidationModel, InternalState<TValidationModel>>): InternalState<TValidationModel> => {
             const keys = Object.keys(states) as Array<string>;
-            const found = keys.find((key) => states[key].name.toLowerCase() === name.toString()?.toLowerCase());
+            const found = keys.find((key) => key === propertyName.toString());
 
             if (found) {
                 return states[found];
@@ -209,11 +209,11 @@ export class StateMechanics<TValidationModel> {
                     return findState(states[cur].state as StateConfig<TValidationModel, InternalState<TValidationModel>>);
                 }
                 return acc;
-            }, null);
+            }, undefined);
         }
 
         if (!this.selectedState)
-            console.warn(`state "${name}" not found`)
+            console.warn(`state "${propertyName}" not found`)
 
         this.setState(findState(this.state));
         this.setModel(model);
@@ -224,7 +224,7 @@ export class StateMechanics<TValidationModel> {
      * @param model sets the model for the state machine
      * @example
      * ```typescript
-     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});     
+     * const state = new StateMechanic({state1: {name: 'state1', state: {test: {name: 'child'}}}});     
      * state.setModel({name: 'test'});
      * assert(state.model.name === 'test','state should be... child - setModel ' );
      * ```
@@ -235,10 +235,7 @@ export class StateMechanics<TValidationModel> {
     }
 }
 
-
-
 function defineGetProperty<T>(object: T, property: keyof T, fnc: Function, model: any) {
-
     if (!object) return;
 
     if (object.hasOwnProperty(property))

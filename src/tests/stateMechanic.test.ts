@@ -1,9 +1,14 @@
 
-import {State, StateConfig} from '../StateMachine/model';
-import {StateMechanics} from '../StateMachine/stateMechanics';
+import {BaseConfig, State, StateConfig} from '../StateMachine/model';
+import {StateMechanic} from '../StateMachine/stateMechanics';
+
 
 export interface CreateListingModel {
     type?: 'singleCard' | 'mixedBundle' | 'sealedSingle';
+}
+
+export interface ConfigType extends BaseConfig<any, any> {
+    type: State<CreateListingModel>;
 }
 
 export const config: StateConfig<CreateListingModel> = {
@@ -48,7 +53,7 @@ export const config: StateConfig<CreateListingModel> = {
 
 describe('Check hierarchy next and previous functions', () => {
     it('should create a new state navigator instance with previous and next states', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         state = state.next();
@@ -74,7 +79,7 @@ describe('Check hierarchy next and previous functions', () => {
     });
 
     it('The readme example works', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         state = state.next();
@@ -102,7 +107,7 @@ describe('Check hierarchy next and previous functions', () => {
 
 describe('check validation functions work', () => {
     it('Validator: Single Card should return false if not selected', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         const model = {};
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
@@ -111,7 +116,7 @@ describe('check validation functions work', () => {
         expect(state.validate?.(model, state)).toBe(false);
     })
     it('Validator: Single Card should return true if not selected', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         const model = {type: 'singleCard'} as CreateListingModel;
@@ -124,7 +129,7 @@ describe('check validation functions work', () => {
 
 describe('Preview next state should return the correct state', () => {
     it('preview next should return correct Single Card', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         expect(state.next().name).toBe('Single Card');
@@ -132,7 +137,7 @@ describe('Preview next state should return the correct state', () => {
 
     })
     it('Preview previous state should return correct state', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         expect(state.next().previous().name).toBe('Create Listing');
@@ -141,7 +146,7 @@ describe('Preview next state should return the correct state', () => {
 
 describe('Test Hide works', () => {
     it('Hide tag selection and Title if mixedBundle is not selected', () => {
-        const instance = new StateMechanics(config);
+        const instance = new StateMechanic(config);
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         state = state.next();
@@ -159,8 +164,7 @@ describe('Test Hide works', () => {
 
 
     describe('Test SelectedState', () => {
-        const instance = new StateMechanics(config);
-        console.log(instance.selectedState.name)
+        const instance = new StateMechanic(config);
 
         expect(instance.selectedState).toBe(instance.state.type);
         instance.moveNext();
@@ -177,16 +181,21 @@ describe('Test Hide works', () => {
     })
 
     describe('Test goto state', () => {
-        const instance = new StateMechanics<CreateListingModel>(config);
-        instance.selectState('Single Card');
-        expect(instance.selectedState.name).toBe('Single Card');
-        instance.selectState('Mixed Bundle');
+        const instance = new StateMechanic<CreateListingModel>(config);
+        instance.gotoState('type');
+        expect(instance.selectedState).toBeDefined();
+        expect(instance.selectedState.name).toBe('Create Listing');
+        instance.gotoState('mixedBundle');
+        expect(instance.selectedState).toBeDefined();
         expect(instance.selectedState.name).toBe('Mixed Bundle');
-        instance.selectState('Title');
+        instance.gotoState('title');
+        expect(instance.selectedState).toBeDefined();
         expect(instance.selectedState.name).toBe('Title');
-        instance.selectState('Tag Selection');
+        instance.gotoState('tagSelection');
+        expect(instance.selectedState).toBeDefined();
         expect(instance.selectedState.name).toBe('Tag Selection');
-        instance.selectState('Sealed Single');
+        instance.gotoState('sealedSingle');
+        expect(instance.selectedState).toBeDefined();
         expect(instance.selectedState.name).toBe('Sealed Single');
     })
 
