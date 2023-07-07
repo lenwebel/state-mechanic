@@ -1,7 +1,7 @@
 {
   "name": "state-mechanic",
   "version": "1.2.31",
-  "description": "A state machine that tracks and validates state using your input model",
+  "description": "A state machine that tracks and validates state, allows for hide/show logic and can run an action when a state is entered.",
   "main": "dist/index",
   "typings": "dist/lib/index.d.ts",
   "scripts": {
@@ -28,9 +28,9 @@
   "author": "webelone",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lenwebel/statemachine/issues"
+    "url": "https://github.com/lenwebel/state-mechanic/issues"
   },
-  "homepage": "https://github.com/lenwebel/statemachine#readme",
+  "homepage": "https://github.com/lenwebel/state-mechanic#readme",
   "dependencies": {
     "@types/node": "^20.3.2",
     "concurrently": "^8.2.0",

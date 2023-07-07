@@ -13,6 +13,14 @@ export class StateMechanics<TValidationModel> {
         this.selectedState = this.state[Object.keys(this.state)[0]];
     }
 
+    /**
+     * Internal Method: Treebuilder Next, a helper method to locate the next state.
+     * @param lengthOfArray 
+     * @param nextParent 
+     * @param nextStateInArray 
+     * @param arrayIndex 
+     * @returns 
+     */
     private getNextState(lengthOfArray: number, nextParent: InternalState<TValidationModel>, nextStateInArray: InternalState<TValidationModel>, arrayIndex: number): InternalState<TValidationModel> {
         let nextState = nextStateInArray;
         // if last item in array set next state to the next parent
@@ -27,6 +35,14 @@ export class StateMechanics<TValidationModel> {
 
         return nextState;
     }
+
+    /**
+     * Internal Method: Treebuilder Previous, a helper method to locate the previous state.
+     * @param parent 
+     * @param previousStateInArray 
+     * @param arrayIndex 
+     * @returns 
+     */
     private getPreviousState(parent: InternalState<TValidationModel>, previousStateInArray: InternalState<TValidationModel>, arrayIndex: number): InternalState<TValidationModel> {
         let previousState: InternalState<TValidationModel> = previousStateInArray;
         // if start of array set previous state to the previous parent
@@ -45,7 +61,12 @@ export class StateMechanics<TValidationModel> {
         return previousState;
     }
 
-    _buildState(config: StateConfig<TValidationModel, InternalState<TValidationModel>>): StateConfig<TValidationModel, InternalState> {
+    /**
+     * Internal method: to build the state object by reference populating the next and previous properties of InternalState objects
+     * @param config 
+     * @returns 
+     */
+    private _buildState(config: StateConfig<TValidationModel, InternalState<TValidationModel>>): StateConfig<TValidationModel, InternalState> {
         const build = (
             config: StateConfig<TValidationModel, InternalState<TValidationModel>>,
             parent?: InternalState<TValidationModel>,
@@ -119,24 +140,60 @@ export class StateMechanics<TValidationModel> {
         const conf = build(config);
         return conf;
     }
-
-    moveNext() {
-        this.selectedState = this.selectedState.next();
-    }
-    movePrevious() {
-        this.selectedState = this.selectedState.previous();
-    }
-
-    setCurrentState(state: InternalState<TValidationModel>) {
+    /**
+     * Internal method: to set the selected state and update the model if required
+     * @param state 
+     * @param model 
+     */
+    private setState(state: InternalState<TValidationModel>, model?: TValidationModel): void {
         this.selectedState = state;
+        this.setModel(model);
+    }
+
+    /**
+     * set the selected state to the next state after the current state, if the current state has a child state then the child state will be selected
+     * @param model update the model if required when moving to the next state
+     * @example 
+     * ```typescript
+     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});
+     * state.moveNext();
+     * assert(state.selectedState.name === 'child','state should be... child - moveMoveNext' );
+     * ```
+     */
+    public moveNext(model?: TValidationModel): void {
+        this.selectedState = this.selectedState.next(model);
+    }
+
+    /**
+     * set the selected state to the previous state before the current state, if the previous state has a child state and that state has child state right down to the bottom of the tree, 
+     * then the last child state will be selected
+     * @param model update the model if required when moving to the next state
+     * @example
+     * ```typescript
+     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});
+     * state.moveNext();
+     * assert(state.selectedState.name === 'child','state should be... child - movePrevious ');
+     * state.movePrevious();
+     * assert(state.selectedState.name === 'state1','state should be... test - moveMovePrevious ');
+     * ```
+     * 
+     */
+    public movePrevious(model?: TValidationModel): void {
+        this.selectedState = this.selectedState.previous();
     }
 
     /**
      * sets the selected state to the first occurance of the state name found in the state config
      * @param name the name of the state to find
      * @returns the state found
+     * @example
+     * ```typescript
+     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});
+     * state.selectState('child');
+     * assert(state.selectedState.name === 'child','state should be... child - selectState ' );
+     * ```
      */
-    selectState(name: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>) {
+    public selectState(name: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>, model?: TValidationModel): void {
 
         const findState = (states: StateConfig<TValidationModel, InternalState<TValidationModel>>): InternalState<TValidationModel> => {
             const keys = Object.keys(states) as Array<string>;
@@ -155,18 +212,25 @@ export class StateMechanics<TValidationModel> {
             }, null);
         }
 
-        this.selectedState = findState(this.state);
-
         if (!this.selectedState)
             console.warn(`state "${name}" not found`)
+
+        this.setState(findState(this.state));
+        this.setModel(model);
     }
 
-
     /**
-     * setState updates the state model which is passed to the hide, validate and action functions.
+     * setState updates the state model which is passed to the internal hide, validate and action functions.
      * @param model sets the model for the state machine
+     * @example
+     * ```typescript
+     * const state = new StateMechanics({state1: {name: 'state1', state: {test: {name: 'child'}}}});     
+     * state.setModel({name: 'test'});
+     * assert(state.model.name === 'test','state should be... child - setModel ' );
+     * ```
+     * 
      */
-    setModel(model: TValidationModel) {
+    public setModel(model: TValidationModel): void {
         this.model = model;
     }
 }
