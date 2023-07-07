@@ -1,18 +1,19 @@
 
-import { InternalState,StateConfig, StateType} from './model';
+import {InternalState, StateConfig, StateType} from './model';
 
 
-export class StateMechanics<TValidationModel = any> {
+export class StateMechanics<TValidationModel> {
     public model: TValidationModel;
     public readonly state: StateConfig<TValidationModel, InternalState<TValidationModel>>;
     public selectedState: InternalState<TValidationModel>;
+    public thing: keyof StateConfig<TValidationModel>;
 
     constructor(config: StateConfig<TValidationModel, StateType>) {
         this.state = this._buildState(config as StateConfig<TValidationModel, InternalState<TValidationModel>>);
         this.selectedState = this.state[Object.keys(this.state)[0]];
     }
 
-    private getNextState(lengthOfArray: number, nextParent:InternalState<TValidationModel>, nextStateInArray:InternalState<TValidationModel>, arrayIndex: number):InternalState<TValidationModel> {
+    private getNextState(lengthOfArray: number, nextParent: InternalState<TValidationModel>, nextStateInArray: InternalState<TValidationModel>, arrayIndex: number): InternalState<TValidationModel> {
         let nextState = nextStateInArray;
         // if last item in array set next state to the next parent
         if (lengthOfArray - 1 === arrayIndex) {
@@ -26,8 +27,8 @@ export class StateMechanics<TValidationModel = any> {
 
         return nextState;
     }
-    private getPreviousState(parent:InternalState<TValidationModel>, previousStateInArray:InternalState<TValidationModel>, arrayIndex: number):InternalState<TValidationModel> {
-        let previousState:InternalState<TValidationModel> = previousStateInArray;
+    private getPreviousState(parent: InternalState<TValidationModel>, previousStateInArray: InternalState<TValidationModel>, arrayIndex: number): InternalState<TValidationModel> {
+        let previousState: InternalState<TValidationModel> = previousStateInArray;
         // if start of array set previous state to the previous parent
         // and set next state to the next item in the array
         if (arrayIndex === 0) {
@@ -46,9 +47,9 @@ export class StateMechanics<TValidationModel = any> {
 
     _buildState(config: StateConfig<TValidationModel, InternalState<TValidationModel>>): StateConfig<TValidationModel, InternalState> {
         const build = (
-            config: StateConfig<TValidationModel, InternalState<TValidationModel> >,
+            config: StateConfig<TValidationModel, InternalState<TValidationModel>>,
             parent?: InternalState<TValidationModel>,
-            nextParent?:InternalState<TValidationModel>
+            nextParent?: InternalState<TValidationModel>
         ): StateConfig<TValidationModel, InternalState<TValidationModel>> => {
 
 
@@ -56,7 +57,7 @@ export class StateMechanics<TValidationModel = any> {
             return keys.reduce((acc: StateConfig<TValidationModel, InternalState<TValidationModel>>, cur: string, index: number) => {
 
                 let previousState: InternalState<TValidationModel>;
-                let nextState:InternalState<TValidationModel>;
+                let nextState: InternalState<TValidationModel>;
                 let childState: StateConfig<TValidationModel, InternalState<TValidationModel>>;
                 const currentState = config[cur];
 
@@ -73,7 +74,7 @@ export class StateMechanics<TValidationModel = any> {
                 // build child state
                 if (currentState.state) {
                     childState = build(
-                        currentState.state as StateConfig<TValidationModel, InternalState<TValidationModel>> ,
+                        currentState.state as StateConfig<TValidationModel, InternalState<TValidationModel>>,
                         currentState,
                         config[keys[index + 1]]
                     );
@@ -126,12 +127,46 @@ export class StateMechanics<TValidationModel = any> {
         this.selectedState = this.selectedState.previous();
     }
 
-    setCurrentState(state: InternalState<TValidationModel>){
-        this.selectedState = state ;
+    setCurrentState(state: InternalState<TValidationModel>) {
+        this.selectedState = state;
     }
 
+    /**
+     * sets the selected state to the first occurance of the state name found in the state config
+     * @param name the name of the state to find
+     * @returns the state found
+     */
+    selectState(name: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>) {
+
+        const findState = (states: StateConfig<TValidationModel, InternalState<TValidationModel>>): InternalState<TValidationModel> => {
+            const keys = Object.keys(states) as Array<string>;
+            const found = keys.find((key) => states[key].name.toLowerCase() === name.toString()?.toLowerCase());
+
+            if (found) {
+                return states[found];
+            }
+
+            return keys.reduce((acc: InternalState<TValidationModel>, cur: string) => {
+                if (acc) return acc;
+                if (states[cur].state) {
+                    return findState(states[cur].state as StateConfig<TValidationModel, InternalState<TValidationModel>>);
+                }
+                return acc;
+            }, null);
+        }
+
+        this.selectedState = findState(this.state);
+
+        if (!this.selectedState)
+            console.warn(`state "${name}" not found`)
+    }
+
+
+    /**
+     * setState updates the state model which is passed to the hide, validate and action functions.
+     * @param model sets the model for the state machine
+     */
     setModel(model: TValidationModel) {
-        /// updating the model, not sure if this affects the state model references.
         this.model = model;
     }
 }

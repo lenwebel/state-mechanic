@@ -176,6 +176,20 @@ describe('Test Hide works', () => {
          expect(instance.selectedState).toBe(instance.state.type);
     })
 
+    describe ('Test goto state', () => {
+        const instance = new StateMechanics<CreateListingModel>(config);
+        instance.selectState('Single Card');
+        expect(instance.selectedState.name).toBe('Single Card');
+        instance.selectState('Mixed Bundle');
+        expect(instance.selectedState.name).toBe('Mixed Bundle');
+        instance.selectState('Title');
+        expect(instance.selectedState.name).toBe('Title');
+        instance.selectState('Tag Selection');
+        expect(instance.selectedState.name).toBe('Tag Selection');
+        instance.selectState('Sealed Single');
+        expect(instance.selectedState.name).toBe('Sealed Single');
+    })
+
 })
 
 
