@@ -206,4 +206,12 @@ describe('Test state property names', () => {
     })
 })
 
+describe('Test goto no propertyName error', () => {
+    it('if a property name has not been provided return a list of valid property names', () => {
+        const instance = new StateMechanic(config);
+        
+        expect(() => instance.gotoState('')).toThrowError('No propertyName provided. Valid property names are: type, singleCard, mixedBundle, sealedSingle, title, tagSelection')
+    })
+})
+
 

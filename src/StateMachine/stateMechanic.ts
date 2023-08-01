@@ -194,9 +194,12 @@ export class StateMechanic<TValidationModel> {
      */
     public gotoState(propertyName: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>, model?: TValidationModel): void {
 
+        const propertyNamesSearched: Array<string> = [];
+
         const findState = (states: StateConfig<TValidationModel, InternalState<TValidationModel>>): InternalState<TValidationModel> => {
             const keys = Object.keys(states) as Array<string>;
-            const found = keys.find((key) => key === propertyName.toString());
+            propertyNamesSearched.push(...keys);
+            const found = keys.find((key) => key === propertyName?.toString());
 
             if (found) {
                 return states[found];
@@ -211,10 +214,16 @@ export class StateMechanic<TValidationModel> {
             }, undefined);
         }
 
-        if (!this.selectedState)
-            console.warn(`state "${propertyName.toString()}" not found`)
-
+        // Call this before the property name check so we can return suggested propertynames
         this.setState(findState(this.state));
+
+        if (!propertyName) {
+            throw new Error(`No propertyName provided. Valid property names are: ${propertyNamesSearched.join(', ')}`);
+        }
+
+        if (!this.selectedState)
+            console.warn(`state "${propertyName?.toString()}" not found`)
+
         this.setModel(model);
     }
 
