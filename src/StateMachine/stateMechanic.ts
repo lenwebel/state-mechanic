@@ -6,7 +6,6 @@ export class StateMechanic<TValidationModel> {
     public model: TValidationModel;
     public readonly state: StateConfig<TValidationModel, InternalState<TValidationModel>>;
     public selectedState: InternalState<TValidationModel>;
-    public thing: keyof StateConfig<TValidationModel>;
 
     constructor(config: StateConfig<TValidationModel, StateType>) {
         this.state = this._buildState(config as StateConfig<TValidationModel, InternalState<TValidationModel>>);
@@ -233,6 +232,15 @@ export class StateMechanic<TValidationModel> {
     public setModel(model: TValidationModel): void {
         this.model = model;
     }
+
+    /**
+     * @description returns the provided state object property names or the state object property names
+     * @param state the state object to get the property names from
+     */
+    public stateKeys(state?: InternalState<TValidationModel>): Array<string> {
+        return Object.keys(state ?? this.state);
+    }
+
 }
 
 function defineGetProperty<T>(object: T, property: keyof T, fnc: Function, model: any) {

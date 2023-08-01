@@ -1,5 +1,5 @@
 
-import { State, StateConfig} from '../StateMachine/model';
+import {  StateConfig} from '../StateMachine/model';
 import {StateMechanic} from '../StateMachine/stateMechanic';
 
 
@@ -195,6 +195,15 @@ describe('Test Hide works', () => {
         expect(instance.selectedState.name).toBe('Sealed Single');
     })
 
+})
+
+describe('Test state property names', () => {
+    it('should return the correct number of state property names', () => {
+        const instance = new StateMechanic(config);
+        expect(instance.stateKeys().length).toBe(1);
+        expect(instance.stateKeys(instance.state.type).length).toBe(5);
+
+    })
 })
 
 
