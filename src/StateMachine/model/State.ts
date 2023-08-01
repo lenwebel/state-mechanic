@@ -11,9 +11,14 @@ export class State<TValidationModel = any>  {
     public visible?: boolean = true;
 
     /**
-     * @description provide a human readable name for the state 
+     * @description provide a machine readable name for the state 
      */
     public name?: string;
+
+    /**
+     * @description provide a human readable name for the state 
+     */
+    public displayName?: string;
 
     /**
      * @description provide a url for the state if used with routing
