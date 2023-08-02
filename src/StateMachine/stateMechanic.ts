@@ -1,11 +1,14 @@
 
 
-import {InternalState, StateConfig, StateType} from './model';
+import {InternalState, StateConfig, StateNode, StateType} from './model';
 
 export class StateMechanic<TValidationModel> {
+
     public model: TValidationModel;
+
     public readonly state: StateConfig<TValidationModel, InternalState<TValidationModel>>;
     public selectedState: InternalState<TValidationModel>;
+
 
     constructor(config: StateConfig<TValidationModel, StateType>) {
         this.state = this._buildState(config as StateConfig<TValidationModel, InternalState<TValidationModel>>);
@@ -60,6 +63,33 @@ export class StateMechanic<TValidationModel> {
         return previousState;
     }
 
+    private _previous(state: InternalState<TValidationModel>): InternalState<TValidationModel> {
+        
+        if (state?.hide?.(this.model) === true) {
+            return state.previous();
+        }
+
+        if (!state)
+            throw new Error('previous state is undefined');
+
+        return state
+    }
+
+
+    private _next(state: InternalState<TValidationModel>): InternalState<TValidationModel> {
+        if (state?.hide?.(this.model) === true) {
+            return state.next();
+        }
+
+        if (!state) {
+            console.warn(state.name)
+            throw new Error('next state is undefined');
+        }
+
+        return state;
+
+    }
+
     /**
      * Internal method: to build the state object by reference populating the next and previous properties of InternalState objects
      * @param config 
@@ -80,10 +110,7 @@ export class StateMechanic<TValidationModel> {
                 let nextState: InternalState<TValidationModel>;
                 let childState: StateConfig<TValidationModel, InternalState<TValidationModel>>;
                 const currentState = config[cur];
-
-                // objects are passed by reference so if they are set we don't need to do anything
-                if (currentState.next && currentState.previous)
-                    return acc;
+                currentState.model = this.model
 
                 nextState = config[keys[index + 1]];
                 previousState = config[keys[index - 1]];
@@ -100,36 +127,9 @@ export class StateMechanic<TValidationModel> {
                     );
                     nextState = childState[Object.keys(childState)[0]];
                 }
-                // typescript does not recognise optional getters
-                defineGetProperty(nextState, 'visible', () => !nextState?.hide?.(nextState.model, nextState), nextState?.model);
-                defineGetProperty(previousState, 'visible', () => !previousState?.hide?.(previousState.model, previousState), previousState?.model);
 
-                acc[cur].next = (model) => {
-
-                    if (model !== undefined) {
-                        this.model = model
-                        nextState.model = this.model;
-                    }
-
-                    if (nextState?.visible === false) {
-                        return nextState.next(model);
-                    }
-
-                    return nextState
-                };
-
-                acc[cur].previous = (model) => {
-                    if (model !== undefined) {
-                        this.model = model
-                        previousState.model = this.model;
-                    }
-
-                    if (previousState?.visible === false) {
-                        return previousState.previous(model);
-                    }
-
-                    return previousState
-                };
+                acc[cur].next = this._next.bind(this, nextState)
+                acc[cur].previous = this._previous.bind(this, previousState)
 
 
                 return acc;
@@ -139,6 +139,9 @@ export class StateMechanic<TValidationModel> {
         const conf = build(config);
         return conf;
     }
+
+
+
     /**
      * Internal method: to set the selected state and update the model if required
      * @param state 
@@ -159,8 +162,8 @@ export class StateMechanic<TValidationModel> {
      * assert(state.selectedState.name === 'child','state should be... child - moveMoveNext' );
      * ```
      */
-    public moveNext(model?: TValidationModel): void {
-        this.selectedState = this.selectedState.next(model);
+    public moveNext(): void {
+        this.selectedState = this.selectedState.next();
     }
 
     /**
@@ -177,7 +180,7 @@ export class StateMechanic<TValidationModel> {
      * ```
      * 
      */
-    public movePrevious(model?: TValidationModel): void {
+    public movePrevious(): void {
         this.selectedState = this.selectedState.previous();
     }
 
@@ -236,10 +239,10 @@ export class StateMechanic<TValidationModel> {
      * state.setModel({name: 'test'});
      * assert(state.model.name === 'test','state should be... child - setModel ' );
      * ```
-     * 
      */
     public setModel(model: TValidationModel): void {
-        this.model = model;
+        this.model = model ?? this.model;
+        this._buildState(this.state);
     }
 
     /**
@@ -250,18 +253,4 @@ export class StateMechanic<TValidationModel> {
         return Object.keys(state ?? this.state);
     }
 
-}
-
-function defineGetProperty<T>(object: T, property: keyof T, fnc: Function, model: any) {
-    if (!object) return;
-
-    if (object.hasOwnProperty(property))
-        delete object[property];
-
-    Object.defineProperty(object, property, {
-        get() {
-            return fnc?.(model);
-        },
-        configurable: true,
-    });
 }

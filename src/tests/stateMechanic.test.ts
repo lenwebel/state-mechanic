@@ -1,5 +1,5 @@
 
-import {  StateConfig} from '../StateMachine/model';
+import {InternalState, StateConfig} from '../StateMachine/model';
 import {StateMechanic} from '../StateMachine/stateMechanic';
 
 
@@ -27,6 +27,7 @@ export const config: StateConfig<CreateListingModel> = {
                         name: 'Title',
                         url: '/createListing/mixed-bundle/title',
                         hide: (model?: CreateListingModel) => {
+                            // console.log('model',model)
                             return ['singleCard', 'mixedBundle'].includes(model?.type ?? '');
                         }
                     },
@@ -51,6 +52,8 @@ describe('Check hierarchy next and previous functions', () => {
     it('should create a new state navigator instance with previous and next states', () => {
         const instance = new StateMechanic(config);
         let state = instance.state.type;
+
+        expect(instance.model).toBeUndefined();
         expect(state.name).toBe('Create Listing');
         state = state.next();
         expect(state.name).toBe('Single Card');
@@ -107,7 +110,8 @@ describe('check validation functions work', () => {
         const model = {};
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
-        state = state.next(model);
+        instance.setModel(model);
+        state = state.next();
         expect(state.name).toBe('Single Card');
         expect(state.validate?.(model, state)).toBe(false);
     })
@@ -116,10 +120,10 @@ describe('check validation functions work', () => {
         let state = instance.state.type;
         expect(state.name).toBe('Create Listing');
         const model = {type: 'singleCard'} as CreateListingModel;
-        state = state.next(model);
+        state = state.next();
         expect(state.name).toBe('Single Card');
         expect(state.validate?.(model, state)).toBe(true);
-        expect(state.model).toEqual(model);
+        // expect(state.model).toEqual(model);
     })
 })
 
@@ -141,25 +145,43 @@ describe('Preview next state should return the correct state', () => {
 })
 
 describe('Test Hide works', () => {
+    let state: InternalState<CreateListingModel>;
+    let instance: StateMechanic<CreateListingModel>;
+
+    beforeEach(() => {
+        instance = new StateMechanic(config);
+        state = instance.state.type;
+    });
+
     it('Hide tag selection and Title if mixedBundle is not selected', () => {
-        const instance = new StateMechanic(config);
-        let state = instance.state.type;
+
         expect(state.name).toBe('Create Listing');
         state = state.next();
         expect(state.name).toBe('Single Card');
         state = state.next();
         expect(state.name).toBe('Mixed Bundle');
-        state = state.next();
-        expect(state.name).toBe('Title');
+
+        
         const model = {type: 'singleCard'} as CreateListingModel;
-
-        expect(state.hide?.(model)).toBe(true);
-        expect(state.next().hide?.(model)).toBe(true);
-
+        instance.setModel(model);
+        expect(instance.model).toEqual(model);
+        expect(instance.model.type).toBe('singleCard');
+        expect(state.name).toBe('Mixed Bundle');
+        
+        state = state.next();
+        expect(state.name).toEqual('Sealed Single');
+        
+        instance.moveNext(); 
+        expect(instance.selectedState.name).toEqual('Single Card');
+        instance.moveNext(); // set selected state to mixed bundle
+        expect(instance.selectedState.name).toEqual('Mixed Bundle');
+        instance.moveNext(); // TRY set selected state to title
+        expect(instance.selectedState.name).toEqual('Sealed Single');
     })
 
 
-    describe('Test SelectedState', () => {
+
+    it('Test SelectedState', () => {
         const instance = new StateMechanic(config);
 
         expect(instance.selectedState).toBe(instance.state.type);
@@ -176,7 +198,8 @@ describe('Test Hide works', () => {
         expect(instance.selectedState).toBe(instance.state.type);
     })
 
-    describe('Test goto state', () => {
+
+    it('Test goto state', () => {
         const instance = new StateMechanic<CreateListingModel>(config);
         instance.gotoState('type');
         expect(instance.selectedState).toBeDefined();
@@ -201,7 +224,7 @@ describe('Test state property names', () => {
     it('should return the correct number of state property names', () => {
         const instance = new StateMechanic(config);
         expect(instance.stateKeys().length).toBe(1);
-        expect(instance.stateKeys(instance.state.type).length).toBe(5);
+        expect(instance.stateKeys(instance.state.type).length).toBe(6);
 
     })
 })
@@ -209,7 +232,7 @@ describe('Test state property names', () => {
 describe('Test goto no propertyName error', () => {
     it('if a property name has not been provided return a list of valid property names', () => {
         const instance = new StateMechanic(config);
-        
+
         expect(() => instance.gotoState('')).toThrowError('No propertyName provided. Valid property names are: type, singleCard, mixedBundle, sealedSingle, title, tagSelection')
     })
 })

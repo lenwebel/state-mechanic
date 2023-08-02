@@ -33,7 +33,7 @@ export class State<TValidationModel = any>  {
     /**
      * @description Use this action to hide the state.
      */
-    public hide?: (model: TValidationModel, state?: StateType<TValidationModel> ) => boolean;
+    public hide?: (model?: TValidationModel, state?: StateType<TValidationModel> ) => boolean;
     
     /**
      * @description Use this action to validate the state.
@@ -41,8 +41,8 @@ export class State<TValidationModel = any>  {
      */
     public validate?: (model: TValidationModel, state?: StateType<TValidationModel>) => boolean;
 
-    /**
-     * @description used internally to store the model
-     */
-    public model?: TValidationModel;
+    // /**
+    //  * @description used internally to store the model
+    //  */
+    // public model?: TValidationModel;
 }

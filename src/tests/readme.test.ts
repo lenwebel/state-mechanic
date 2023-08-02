@@ -1,4 +1,4 @@
-import {State, StateConfig} from '../StateMachine/model';
+import {InternalState, State, StateConfig} from '../StateMachine/model';
 import {StateMechanic} from '../StateMachine/stateMechanic';
 import assert from 'assert';
 
@@ -41,28 +41,31 @@ export const config: StateConfig<CreateListingModel> = {
                 name: 'Sealed Single',
                 url: '/createListing/sealed-single',
             },
-        } ,
+        },
     },
 };
 
 describe('Double check readme file', () => {
-    const instance = new StateMechanic(config);
-
-    let state = instance.state.type;
+    let state: InternalState<CreateListingModel>;
+    let instance: StateMechanic<CreateListingModel>;
+    beforeEach(() => {
+        instance = new StateMechanic(config);
+        state = instance.state.type;
+    });
 
     it('should create a new state navigator instance with previous and next states', () => {
 
+        expect(instance.model).toBeUndefined();
         state = state.next();
-        assert(state.name === 'Single Card', "should be single Card");
+        expect(state.name).toBe('Single Card');
         state = state.next();
-        assert(state.name === 'Mixed Bundle');
+        expect(state.name).toBe('Mixed Bundle');
         state = state.next();
-        assert(state.name === 'Title');
-        expect(1).toBe(1);
+        expect(state.name).toBe('Title');
     })
 
-    describe('selected state should be set to the first state', () => {
-        const instance = new StateMechanic(config);
+    it('selected state should be set to the first state', () => {
+
         expect(instance.selectedState.name).toBe('Create Listing');
         instance.moveNext();
         expect(instance.selectedState.name).toBe('Single Card');
