@@ -69,8 +69,9 @@ export class StateMechanic<TValidationModel> {
             return state.previous();
         }
 
-        if (!state)
-            throw new Error('previous state is undefined');
+        if (!state) {
+            console.warn('previous state is undefined');
+        }
 
         return state
     }
@@ -83,7 +84,6 @@ export class StateMechanic<TValidationModel> {
 
         if (!state) {
             console.warn(state.name)
-            throw new Error('next state is undefined');
         }
 
         return state;
