@@ -9,7 +9,6 @@ export class StateNode<TValidationModel> {
         this.model = model;
     }
 
-
     // Define the next() function using the model stored in this instance
     public next(): InternalState<TValidationModel> {
         console.log('next state', this.model);
@@ -37,8 +36,6 @@ export class StateNode<TValidationModel> {
 
         return this.state.previous();
     }
-
-
 }
 
 export class InternalState<TValidationModel = any> extends State<TValidationModel> {
