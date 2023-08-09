@@ -218,6 +218,24 @@ describe('Test Hide works', () => {
         expect(instance.selectedState.name).toBe('Sealed Single');
     })
 
+    it('test beginnning state back 1 should return first(current) state', () => {
+        const instance = new StateMechanic(config);
+        instance.movePrevious();
+        expect(instance.selectedState.name).toBe('Create Listing');
+    })
+
+    it('test end state forward 1 should return current(last) state', () => {
+        const instance = new StateMechanic(config);
+        instance.moveNext();
+        instance.moveNext();
+        instance.moveNext();
+        instance.moveNext();
+        instance.moveNext();
+        instance.moveNext();
+        instance.moveNext();
+        expect(instance.selectedState.name).toBe('Sealed Single');
+    })
+
 })
 
 describe('Test state property names', () => {

@@ -125,11 +125,12 @@ export class StateMechanic<TValidationModel> {
                         currentState,
                         config[keys[index + 1]]
                     );
+
                     nextState = childState[Object.keys(childState)[0]];
                 }
 
-                acc[cur].next = this._next.bind(this, nextState)
-                acc[cur].previous = this._previous.bind(this, previousState)
+                acc[cur].next = this._next.bind(this, nextState ?? currentState)
+                acc[cur].previous = this._previous.bind(this, previousState ?? currentState)
 
 
                 return acc;
