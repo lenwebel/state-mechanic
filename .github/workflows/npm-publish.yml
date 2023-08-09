@@ -19,6 +19,7 @@ jobs:
       - name: Checkout code  
         uses: actions/checkout@v2
         with: 
+          repository: ${{ github.repository }}
           token: ${{ secrets.DEPLOYMENT_PAT }}
       - name: Set current date as env variable
         run: echo "MY_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
