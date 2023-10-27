@@ -222,11 +222,12 @@ export class StateMechanic<TValidationModel> {
         this.setState(findState(this.state));
 
         if (!propertyName) {
-            throw new Error(`No propertyName provided. Valid property names are: ${propertyNamesSearched.join(', ')}`);
+            console.warn(`No propertyName provided. Valid property names are: ${propertyNamesSearched.join(', ')}`);
         }
 
-        if (!this.selectedState)
+        if (!this.selectedState) {
             console.warn(`state "${propertyName?.toString()}" not found`)
+        }
 
         this.setModel(model);
     }
