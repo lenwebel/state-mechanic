@@ -64,7 +64,7 @@ export class StateMechanic<TValidationModel> {
     }
 
     private _previous(state: InternalState<TValidationModel>): InternalState<TValidationModel> {
-        
+
         if (state?.hide?.(this.model) === true) {
             return state.previous();
         }
@@ -188,7 +188,7 @@ export class StateMechanic<TValidationModel> {
     /**
      * sets the selected state to the first occurance of the state name found in the state config
      * @param propertyName the name of the state to find
-     * @returns the state found
+     * @returns true if the state was found and selected, false if the state was not found
      * @example
      * ```typescript
      * const state = new StateMechanic({state1: {name: 'state1', state: {test: {name: 'child'}}}});
@@ -196,7 +196,7 @@ export class StateMechanic<TValidationModel> {
      * assert(state.selectedState.name === 'child','state should be... child - gotoState ' );
      * ```
      */
-    public gotoState(propertyName: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>, model?: TValidationModel): void {
+    public gotoState(propertyName: keyof StateConfig<TValidationModel, InternalState<TValidationModel>>, model?: TValidationModel): boolean {
 
         const propertyNamesSearched: Array<string> = [];
 
@@ -223,13 +223,16 @@ export class StateMechanic<TValidationModel> {
 
         if (!propertyName) {
             console.warn(`No propertyName provided. Valid property names are: ${propertyNamesSearched.join(', ')}`);
+            return false;
         }
 
         if (!this.selectedState) {
             console.warn(`state "${propertyName?.toString()}" not found`)
+            return false;
         }
 
         this.setModel(model);
+        return true;
     }
 
     /**
